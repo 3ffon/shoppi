@@ -1,0 +1,33 @@
+.list_wrapper {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  width: 100svw;
+  /* padding: 0px */
+}
+
+.list {
+  width: 100%;
+  position: relative;
+  overflow: auto;
+  min-height: 60vh;
+  max-height: 60vh;
+  touch-action: pan-x pan-y;
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+  display: block;
+}
+
+.list ul {
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .list {
+    margin-bottom: 20px;
+  }
+}
+
+.search {
+  width: 96%;
+}

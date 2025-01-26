@@ -1,0 +1,126 @@
+{
+  "sections": [
+    {
+      "id": "veggies",
+      "name": "ירקות ופירות",
+      "order": 0,
+      "collapse": true
+    },
+    {
+      "id": "drinks",
+      "name": "שתייה",
+      "order": 1,
+      "collapse": true
+    },
+    {
+      "id": "deli",
+      "name": "מעדנייה",
+      "order": 2,
+      "collapse": true
+    },
+    {
+      "id": "dairy",
+      "name": "מוצרי חלב",
+      "order": 3,
+      "collapse": true
+    }
+  ],
+  "products": [
+    {
+      "id": "מלפפון",
+      "section": "veggies",
+      "quantity": 1,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "עגבניות",
+      "section": "veggies",
+      "quantity": 0,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "עגבניות שרי",
+      "section": "veggies",
+      "quantity": 0,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "בצל לבן",
+      "section": "veggies",
+      "quantity": 1,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "שישיית מים 1.5ל",
+      "section": "drinks",
+      "quantity": 1,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "שישיית מים 0.5ל",
+      "section": "drinks",
+      "quantity": 1,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "קולה זירו 1ל",
+      "section": "drinks",
+      "quantity": 1,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "פטינה",
+      "section": "deli",
+      "quantity": 1,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "חלב סויה ירוק",
+      "section": "dairy",
+      "quantity": 0,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "יוגורט פרו ירוק",
+      "section": "dairy",
+      "quantity": 1,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "צהובה פרוסות 15%",
+      "section": "dairy",
+      "quantity": 0,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "צהובה מגורדת",
+      "section": "dairy",
+      "quantity": 0,
+      "icon": "",
+      "image": "",
+      "created": ""
+    }
+  ]
+}
