@@ -1,24 +1,17 @@
 "use client"
-import React, { useEffect, useCallback, useMemo } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import {
     List,
     ListItem,
     ListItemButton,
-    ListSubheader,
-    Collapse,
     TextField,
 } from '@mui/material';
-
-import {
-    ExpandMoreOutlined,
-    ChevronRightOutlined
-} from '@mui/icons-material';
 
 import style from './list.module.css';
 
 import Checkbox from '@mui/material/Checkbox';
 import { ApiResponseInterface, ProductInterface, SectionInterface } from '../../lib/interfaces';
-import { fetchDb, updateProduct, updateSection } from '../../lib/apiClient';
+import { fetchDb, updateProduct } from '../../lib/apiClient';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { debounce } from 'lodash'
@@ -111,6 +104,8 @@ export default function Items({ ...props }) {
     const [searctInput, setSearchInput] = React.useState('');
     const [search, setSearch] = React.useState('');
     
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSetSearch = useCallback(debounce(setSearch, 150), []);
     
     useEffect(() => {
