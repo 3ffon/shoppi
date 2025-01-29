@@ -1,5 +1,10 @@
 {
-    "main": {
-        "search_input": "Product search"
-    }
+    "title": "Shoppi",
+    "search_input": "Product search",
+    "product_id": "Product Name",
+    "section": "Section",
+    "save": "Save",
+    "add_item": "Add Product",
+    "item_edit_btn": "Edit",
+    "item_delete_btn": "Delete"
 }

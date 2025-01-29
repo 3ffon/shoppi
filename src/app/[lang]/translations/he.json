@@ -1,5 +1,10 @@
 {
-    "main": {
-        "search_input": "חפש או הוסף מוצר"
-    }
+    "title": "קניות-לי",
+    "search_input": "חפש או הוסף מוצר",
+    "product_id": "שם מוצר",
+    "section": "קטגוריה",
+    "save": "שמור",
+    "add_item": "הוסף מוצר",
+    "item_edit_btn": "ערוך",
+    "item_delete_btn": "מחק"
 }

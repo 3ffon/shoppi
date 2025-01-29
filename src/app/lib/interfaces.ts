@@ -24,6 +24,6 @@ export interface DBReseponseInterface {
 
 // ApiResponseInterface - schema of a 
 export interface ApiResponseInterface {
-  sections: SectionInterface[];
-  itemsGrouped: { [key: string]: ProductInterface[] };
+  items: ProductInterface[];
+  sections: {[key: string]: SectionInterface};
 }

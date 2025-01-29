@@ -1,25 +1,31 @@
 import { NextResponse } from "next/server";
-import { groupBy, orderBy } from "lodash";
 import DBController from "./dbHandler";
-import { ApiResponseInterface, DBReseponseInterface } from "../lib/interfaces";
+import { ApiResponseInterface, DBReseponseInterface, SectionInterface } from "../lib/interfaces";
 
 export async function GET() {
   const db : DBReseponseInterface | undefined = DBController.getDB();
   
-  // order sections list by order
-  const sections = orderBy(db?.sections, sec => sec.order);
-
-  // group by sections
-  const itemsGrouped = groupBy(db?.products, product => product.section);
-
-  // order items by id
-  Object.keys(itemsGrouped).forEach(section => {
-    itemsGrouped[section] = orderBy(itemsGrouped[section], item => item.id);
+  // map of sections by id
+  const sectionsMap: { [key: string]: SectionInterface } = {};
+  db?.sections.map(section => {
+    sectionsMap[section.id] = section;
   });
 
+  // order items by section order, then by id
+  const items = db?.products.sort((a, b) => {
+    const sectionA = sectionsMap[a.section];
+    const sectionB = sectionsMap[b.section];
+    return (sectionA?.order || 0) - (sectionB?.order || 0) || a.id.localeCompare(b.id);
+  });
+
+  if (!items) {
+    return NextResponse.json({ error: 'No items found' }, { status: 404 });
+  }
+
+  
   const body : ApiResponseInterface = {
-    sections,
-    itemsGrouped
+    items,
+    sections: sectionsMap
   }
 
   return NextResponse.json(

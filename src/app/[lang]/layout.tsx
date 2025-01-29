@@ -1,55 +1,41 @@
-"use client"
 import React from "react";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
-import { prefixer } from 'stylis';
-import rtlPlugin from 'stylis-plugin-rtl';
+import MuiThemeProvider from "./MuiThemeProvider";
+import { getDictionary } from "./translation";
+import { DictionaryProvider } from "./DictionaryProvider";
 
 
-const themeRTL = createTheme({
-  direction: 'rtl',
-  colorSchemes: {
-    dark: true,
+export function generateViewport({ }) {
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    minimumScale: 1,
+    userScalable: false,
   }
-});
+}
 
-const theme = createTheme({
-  colorSchemes: {
-    dark: true,
-  }
-});
 
-const rtlCache = createCache({
-  key: 'muirtl',
-  stylisPlugins: [prefixer, rtlPlugin],
-});
 
-const ltrCache = createCache({
-  key: 'mui',
-});
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params,
 }: {
   children: React.ReactNode,
-  params: Promise<{ lang: string }>
+  params: Promise<{ lang: 'en' | 'he' }>
 }) {
-  const { lang } = React.use(params);
+  const lang = (await params).lang;
   const rtl = lang == "he";
-
+  const dict = await getDictionary(lang);
   return (
     <html lang={lang} dir={rtl ? "rtl" : "ltr"}>
-      <CacheProvider value={rtl ? rtlCache : ltrCache}>
-        <ThemeProvider theme={rtl ? themeRTL : theme}>
-          <body>
-            <CssBaseline />
+      <MuiThemeProvider rtl>
+        <body>
+          <DictionaryProvider dictionary={dict} locale={lang}>
+
             {children}
-          </body>
-        </ThemeProvider>
-      </CacheProvider>
+          </DictionaryProvider>
+        </body>
+      </MuiThemeProvider>
     </html>
   );
 }

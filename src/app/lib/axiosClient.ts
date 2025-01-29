@@ -10,12 +10,10 @@ const apiClient: AxiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
-
-// Add a request interceptor (optional)
 apiClient.interceptors.request.use(
   (config) => {
     // Add logic here if needed, e.g., adding auth tokens
-    console.log("Request sent:", config);
+    // console.log("Request sent:", config);
     return config;
   },
   (error) => {
@@ -23,7 +21,6 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Add a response interceptor (optional)
 apiClient.interceptors.response.use(
   (response) => {
     return response;

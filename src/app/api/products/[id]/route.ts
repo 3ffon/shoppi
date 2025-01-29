@@ -12,3 +12,13 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json(product, {status: 200});
 
 }
+
+export async function DELETE(request: NextRequest) {
+    const productId: string | undefined = await request.url.split('/').pop();
+
+    if (!productId) return NextResponse.json({status: 'failed delete'}, {status: 500});
+
+    const decodedId = decodeURIComponent(productId);
+    DBController.deleteProduct(decodedId);
+    return NextResponse.json({status: 'success'}, {status: 200});
+}

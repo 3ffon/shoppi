@@ -40,6 +40,17 @@ class DBHandler {
         return product_ref;
     }
 
+    deleteProduct(productId: string) {
+        console.log(productId);
+        if (this.db) {
+            this.db.products = this.db.products.filter(prod => {
+                console.log('checking', prod.id, productId);
+                return prod.id !== productId
+            });
+            this.updateDB();
+        }
+    }
+
     createSection(section: SectionInterface) {
         this.db?.sections.push(section);
         this.updateDB();
@@ -56,6 +67,15 @@ class DBHandler {
         this.updateDB();
         return section_ref;
     }
+
+    deleteSection(section: SectionInterface) {
+        if (this.db) {
+            this.db.sections = this.db.sections.filter(sect => sect.id !== section.id);
+            this.updateDB();
+        }
+    }
+
+    
 }
 
 const DBController = new DBHandler('./products.json');
