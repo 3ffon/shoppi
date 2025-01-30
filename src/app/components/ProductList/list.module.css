@@ -5,40 +5,53 @@
   width: 100vw;
   height: 100%;
   overflow: hidden;
-  padding-top: 3px;
+  padding-top: 4px;
+}
+
+@media (min-width: 600px) {
+  .list_wrapper {
+    padding-top: 10px;
+  }
 }
 
 .list {
   width: 100%;
   overflow: auto;
   min-height: 0;
-  max-height: calc(100vh - 160px);
   touch-action: pan-x pan-y;
-  margin-top: 7px !important;
-  margin-bottom: 10px !important;
-  display: block;
   overscroll-behavior: contain;
+  max-height: calc(100vh - 210px);
+  margin-top: 4px !important;
 }
 
-.list ul {
-  padding: 0;
-}
-
-@media (max-width: 768px) {
+@media (min-width: 600px) {
   .list {
-    margin-bottom: 10px;
-    max-height: calc(100vh - 230px);
+    max-height: calc(100vh - 160px);
   }
 }
 
-/* search and add item styles */
+.list > div > div > div > li > div {
+  padding-left: 0 !important;
+  padding-right: 12px !important;
+}
+
+.search_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  padding: 0 16px;
+}
+
 .search {
-  width: 96%;
+  width: 100%;
 }
 
 .add_item {
-  width: 96%;
-  margin-top: 5px;
+  width: 100%;
+  padding: 0 16px;
+  margin-top: 8px;
 }
 
 .add_item_form {
@@ -47,6 +60,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 96%;
+  max-width: 400px;
   padding: 14px;
 }
 
@@ -60,4 +74,18 @@
   background-color: #fff;
   color: #000;
   border: 1px solid #555;
+}
+
+.delete_button_wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.delete_button {
+  height: 100%;
+  width: 70px;
+  border-radius: 0 !important;
 }

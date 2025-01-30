@@ -41,10 +41,8 @@ class DBHandler {
     }
 
     deleteProduct(productId: string) {
-        console.log(productId);
         if (this.db) {
             this.db.products = this.db.products.filter(prod => {
-                console.log('checking', prod.id, productId);
                 return prod.id !== productId
             });
             this.updateDB();

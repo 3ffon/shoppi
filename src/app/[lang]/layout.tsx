@@ -26,12 +26,12 @@ export default async function RootLayout({
   const lang = (await params).lang;
   const rtl = lang == "he";
   const dict = await getDictionary(lang);
+
   return (
     <html lang={lang} dir={rtl ? "rtl" : "ltr"}>
-      <MuiThemeProvider rtl>
-        <body>
+      <MuiThemeProvider rtl={rtl}>
+        <body style={{ overflow: "hidden", overscrollBehavior: "contain" }}>
           <DictionaryProvider dictionary={dict} locale={lang}>
-
             {children}
           </DictionaryProvider>
         </body>

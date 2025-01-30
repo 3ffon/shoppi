@@ -7,6 +7,8 @@
   width: 100svw;
   padding: 0;
   padding-top: 67px;
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,33 +22,4 @@
   }
 }
 
-
-
-
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
-
-  .footer a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-}
-
-/* @media (max-width: 600px) {
-  .page {
-    padding-left: 0;
-    padding-right: 0;
-    padding-top: 40px;
-    padding-bottom: 20px;
-  }
-} */
 

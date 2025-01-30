@@ -5,6 +5,12 @@
     "section": "Section",
     "save": "Save",
     "add_item": "Add Product",
+    "add_item_title": "Add Product Form",
     "item_edit_btn": "Edit",
-    "item_delete_btn": "Delete"
+    "item_delete_btn": "Delete",
+    "item_delete_dialog": "Confirm deleting",
+    "item_delete_dialog_confirm": "Confirm",
+    "item_delete_dialog_cancel": "Cancel",
+    "dark_mode": "Dark Mode",
+    "light_mode": "Light Mode"
 }

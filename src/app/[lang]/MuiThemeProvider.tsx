@@ -37,7 +37,6 @@ export default function MuiThemeProvider({
     children: React.ReactNode,
     rtl: boolean
 }) {
-
     return (
         <CacheProvider value={rtl ? rtlCache : ltrCache}>
             <ThemeProvider theme={rtl ? themeRTL : theme}>

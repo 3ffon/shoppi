@@ -15,17 +15,27 @@ import {
     TextField,
     Menu,
     useTheme,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    Typography,
+    IconButton,
+    styled,
+    Badge,
+    badgeClasses,
 } from '@mui/material';
 
 import {
     Add as AddIcon,
     Clear as ClearIcon,
+    DeleteOutlined as DeleteIcon,
+    Tune as TuneIcon,
 } from '@mui/icons-material';
 import style from './list.module.css';
 import Checkbox from '@mui/material/Checkbox';
 import { ProductInterface, SectionInterface } from '../../lib/interfaces';
 import { fetchDb, updateProduct, createProduct, deleteProduct } from '../../lib/apiClient';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
 import { useDictionary } from '@/app/[lang]/DictionaryProvider';
 
@@ -33,6 +43,13 @@ async function fetchProducts() {
     const response = await fetchDb();
     return response;
 }
+
+const CartBadge = styled(Badge)`
+  & .${badgeClasses.badge} {
+    top: -12px;
+    right: -6px;
+  }
+`;
 
 function AddItem({ ...props }) {
     const {
@@ -69,20 +86,42 @@ function Item({ ...props }) {
     const {
         section,
         updateItems,
+        isDragging,
+        setIsDragging,
     } = props;
 
     const { dictionary } = useDictionary();
     const [item, setItem] = React.useState(props.item);
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const [contextMenu, setContextMenu] = React.useState<{
         mouseX: number;
         mouseY: number;
     } | null>(null);
-    const [longPressTimer, setLongPressTimer] = React.useState<NodeJS.Timeout | null>(null);
+    const [isSwiped, setIsSwiped] = React.useState(false);
+    const x = useMotionValue(0); // Track horizontal drag movement
+    const buttonOpacity = useTransform(x, [0, 100], [0, 1]); // Button fades inx
+    const buttonWidth = useTransform(x, [0, 100], [0, 70]); // Button width expands
+
+    const handleDragEnd = (event: TouchEvent | MouseEvent | PointerEvent, info: PanInfo) => {
+        resetSwipeState(info.offset.x > 100);
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', () => resetSwipeState());
+        return () => document.removeEventListener('click', () => resetSwipeState());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSwiped, x]);
+
+    const resetSwipeState = (state = false) => {
+        setIsSwiped(state);
+        setIsDragging(state);
+        animate(x, state ? 100 : 0, { type: "spring", stiffness: 300, damping: 30 });
+    };
 
     const updateItem = async (data: ProductInterface) => {
         setItem(data);
         await updateProduct(data.id, data);
-    }
+    };
 
     const handleContextMenu = (event: React.MouseEvent) => {
         event.preventDefault();
@@ -96,79 +135,121 @@ function Item({ ...props }) {
         );
     };
 
-    const handleTouchStart = (event: React.TouchEvent) => {
-        const timer = setTimeout(() => {
-            // Open context menu at touch position
-            setContextMenu({
-                mouseX: event.touches[0].clientX - 10,
-                mouseY: event.touches[0].clientY - 10,
-            });
-        }, 500); // 500ms long press
-        setLongPressTimer(timer);
-    };
-
-    const handleTouchEnd = () => {
-        if (longPressTimer) {
-            clearTimeout(longPressTimer);
-            setLongPressTimer(null);
-        }
-    };
-
-    const handleClose = () => {
+    const handleContextMenuClose = () => {
         setContextMenu(null);
     };
 
     return (
-        <ListItem key={`item-${section}-${item.id}`} dense>
-            <ListItemButton
-                sx={{
-                    fontWeight: 'bold',
-                    display: "flex",
-                    justifyContent: "space-between",
-                }}
-                onContextMenu={handleContextMenu}
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
-                onTouchMove={handleTouchEnd} // Cancel long press if user moves finger
-                onClick={() => {
-                    const updatedItem = {
-                        ...item,
-                        quantity: item.quantity > 0 ? 0 : 1
-                    };
-                    updateItem(updatedItem);
+        <Box sx={{ position: 'relative', overflow: 'hidden', width: '100%' }}>
+            <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 70 }}
+                onDragEnd={handleDragEnd}
+                dragElastic={0.2}
+                dragMomentum={false}
+                style={{ x }} // Applies translation to both elements
+                onClick={(e) => e.stopPropagation()}
+            >
+                <ListItem key={`item-${section}-${item.id}`}>
+                    <ListItemButton
+                        sx={{
+                            fontWeight: 'bold',
+                            display: "flex",
+                            justifyContent: "space-between",
+                            transition: 'transform 0.3s ease',
+                        }}
+                        onContextMenu={handleContextMenu}
+                        onClick={(e) => {
+                            if (isSwiped || isDragging) {
+
+                                return e.stopPropagation();
+                            }
+                            const updatedItem = {
+                                ...item,
+                                quantity: item.quantity > 0 ? 0 : 1
+                            };
+                            updateItem(updatedItem);
+                        }}
+                    >
+                        <div style={{ display: 'grid' }}>
+                            {item.id}
+                            <small>{section.name}</small>
+                        </div>
+                        <Checkbox
+                            sx={{
+                                pointerEvents: "none",
+                            }}
+                            checked={item.quantity > 0}
+                        />
+                    </ListItemButton>
+                    <Menu
+                        open={contextMenu !== null}
+                        onClose={handleContextMenuClose}
+                        anchorReference="anchorPosition"
+                        anchorPosition={
+                            contextMenu !== null
+                                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                                : undefined
+                        }
+                    >
+                        <MenuItem onClick={() => {
+                            handleContextMenuClose();
+                        }}>{dictionary.item_edit_btn}</MenuItem>
+                        <MenuItem onClick={async () => {
+                            setOpenDeleteDialog(true);
+                            handleContextMenuClose();
+                        }}>{dictionary.item_delete_btn}</MenuItem>
+                    </Menu>
+                </ListItem>
+            </motion.div>
+
+            <motion.div
+                className={style.delete_button_wrapper}
+                style={{
+                    width: buttonWidth,
+                    opacity: buttonOpacity,
+                    pointerEvents: isSwiped ? 'auto' : 'none',
                 }}
             >
-                <div style={{ display: 'grid' }}>
-                    {item.id}
-                    <small>{section.name}</small>
-                </div>
-                <Checkbox
-                    sx={{
-                        pointerEvents: "none",
+                <Button
+                    className={style.delete_button}
+                    variant="contained"
+                    color="error"
+                    onClick={async () => {
+                        setOpenDeleteDialog(true);
                     }}
-                    checked={item.quantity > 0}
-                />
-            </ListItemButton>
-            <Menu
-                open={contextMenu !== null}
-                onClose={handleClose}
-                anchorReference="anchorPosition"
-                anchorPosition={
-                    contextMenu !== null
-                        ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-                        : undefined
-                }
+                >
+                    <DeleteIcon />
+                </Button>
+            </motion.div>
+            <Dialog
+                open={openDeleteDialog}
+                onClose={() => {
+                    setOpenDeleteDialog(false);
+                    resetSwipeState();
+                }}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
             >
-                <MenuItem onClick={() => {
-                    handleClose();
-                }}>{dictionary.item_edit_btn}</MenuItem>
-                <MenuItem onClick={async () => {
-                    handleClose();
-                    await deleteProduct(item.id);
-                    await updateItems();
-                }}>{dictionary.item_delete_btn}</MenuItem>
-            </Menu>
-        </ListItem>
+                <DialogTitle id="alert-dialog-title">
+                    {dictionary.item_delete_dialog} {item.id} ?
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={() => {
+                        setOpenDeleteDialog(false);
+                        resetSwipeState();
+                    }}>{dictionary.item_delete_dialog_cancel}</Button>
+                    <Button onClick={async () => {
+                        await deleteProduct(item.id);
+                        await updateItems();
+                        setOpenDeleteDialog(false);
+                    }} autoFocus>
+                        {dictionary.item_delete_dialog_confirm}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Box>
+
     );
 }
 
@@ -180,6 +261,7 @@ export default function Items({ }) {
     const [searctInput, setSearchInput] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [addItemOpen, setAddItemOpen] = React.useState(false);
+    const [isDragging, setIsDragging] = React.useState(false);
     const filteredProducts = items?.filter((product: ProductInterface) =>
         product.id.toLowerCase().includes(search.toLowerCase())
     );
@@ -212,7 +294,7 @@ export default function Items({ }) {
         const sectionId = e.currentTarget.section.value;
 
         const product: ProductInterface = {
-            id: productId,
+            id: String(productId).trim(),
             section: sectionId,
             quantity: 0,
             created: new Date().toISOString(),
@@ -234,26 +316,32 @@ export default function Items({ }) {
 
     return (
         <div className={style.list_wrapper}>
-            <TextField
-                id="item-search"
-                label={dictionary.search_input}
-                variant="outlined"
-                className={style.search}
-                value={searctInput}
-                autoComplete='off'
-                slotProps={{
-                    input: {
-                        endAdornment: search.length > 0 && <InputAdornment position="end"><ClearIcon onClick={() => {
-                            setSearch('')
-                            setSearchInput('')
-                        }} /></InputAdornment>,
-                    },
-                }}
-                onChange={e => {
-                    setSearchInput(e.target.value);
-                    debouncedSetSearch(e.target.value);
-                }}
-            />
+            <div className={style.search_wrapper}>
+                <TextField
+                    id="item-search"
+                    label={dictionary.search_input}
+                    variant="outlined"
+                    className={style.search}
+                    value={searctInput}
+                    autoComplete='off'
+                    slotProps={{
+                        input: {
+                            endAdornment: search.length > 0 && <InputAdornment position="end"><ClearIcon onClick={() => {
+                                setSearch('')
+                                setSearchInput('')
+                            }} /></InputAdornment>,
+                        },
+                    }}
+                    onChange={e => {
+                        setSearchInput(e.target.value);
+                        debouncedSetSearch(e.target.value);
+                    }}
+                />
+                <IconButton className={style.tune_button}>
+                    <TuneIcon sx={{ fontSize: 30 }} />
+                    <CartBadge badgeContent={2} color="primary" overlap="circular" />
+                </IconButton>
+            </div>
 
             <AddItem show={search.length > 0} addItem={addItem} />
 
@@ -275,6 +363,8 @@ export default function Items({ }) {
                                 item={item}
                                 section={sections[item.section]}
                                 updateItems={updateItems}
+                                isDragging={isDragging}
+                                setIsDragging={setIsDragging}
                             />
                         </motion.div>
                     ))}
@@ -286,48 +376,52 @@ export default function Items({ }) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box className={`${style.add_item_form} ${theme.palette.mode}`}>
-                    <form onSubmit={handleAddProduct}>
-                        <TextField
-                            fullWidth
-                            required
-                            id="productId"
-                            name="productId"
-                            label={dictionary.product_id}
-                            variant="outlined"
-                            value={searctInput}
-
-                            sx={{ mb: 2 }}
-                        />
-                        <FormControl
-                            fullWidth
-                            sx={{ mb: 2 }}
-                            required
+                <Box
+                    className={`${style.add_item_form} ${theme.palette.mode}`}
+                    component="form"
+                    onSubmit={handleAddProduct}
+                >
+                    <Typography variant="h5" component="h2" gutterBottom>
+                        {dictionary.add_item_title}
+                    </Typography>
+                    <TextField
+                        fullWidth
+                        required
+                        id="productId"
+                        name="productId"
+                        label={dictionary.product_id}
+                        variant="outlined"
+                        defaultValue={searctInput.trim()}
+                        autoComplete='off'
+                        sx={{ mb: 2 }}
+                    />
+                    <FormControl
+                        fullWidth
+                        sx={{ mb: 2 }}
+                        required
+                    >
+                        <InputLabel id="section-label">{dictionary.section}</InputLabel>
+                        <Select
+                            labelId="section-label"
+                            id="section"
+                            name="section"
+                            label={dictionary.section}
+                            defaultValue="veggies"
                         >
-                            <InputLabel id="section-label">{dictionary.section}</InputLabel>
-                            <Select
-                                labelId="section-label"
-                                id="section"
-                                name="section"
-                                label={dictionary.section}
-                                defaultValue="veggies"
-                            >
-                                {Object.entries(sections).map(([id, section]) => (
-                                    <MenuItem key={id} value={id}>{section.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                            {Object.entries(sections).map(([id, section]) => (
+                                <MenuItem key={id} value={id}>{section.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
 
-                        <Button
-                            fullWidth
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                        >
-                            {dictionary.save}
-                        </Button>
-
-                    </form>
+                    <Button
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                    >
+                        {dictionary.save}
+                    </Button>
                 </Box>
             </Modal>
         </div>

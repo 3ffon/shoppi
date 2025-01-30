@@ -1,31 +1,36 @@
 "use client";
 import * as React from 'react'
 import Items from '../components/ProductList/items';
-import { 
-  AppBar,  
-  Box, 
-  Divider, 
-  Drawer, 
-  IconButton, 
-  List, 
-  ListItem, 
-  ListItemButton, 
-  ListItemIcon, 
-  ListItemText, 
-  styled, 
-  Toolbar, 
+import {
+  AppBar,
+  Box,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  styled,
+  Toolbar,
   Typography,
+  useTheme,
 } from '@mui/material';
-import { 
+import { useColorScheme } from '@mui/material/styles';
+import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
-  Inbox as InboxIcon,
-  Mail as MailIcon,
+  Language as LanguageIcon,
+  DarkMode as DarkModeIcon,
+  LightMode as LightModeIcon,
 } from "@mui/icons-material";
 import CssBaseline from '@mui/material/CssBaseline';
 import { useDictionary } from './DictionaryProvider';
+import Cookies from "js-cookie";
 import style from './page.module.css';
+import { usePathname, useRouter } from 'next/navigation';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -36,17 +41,40 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-start',
 }));
 
-export default function Home({}) {
+export default function Home({ }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const theme = useTheme();
+  const { setMode } = useColorScheme();
   const { dictionary, locale } = useDictionary();
   const rtl = locale === 'he';
   const [open, setOpen] = React.useState(false);
+
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
       return;
     }
     setOpen(open);
   };
-  
+
+  const switchLocale = (newLocale: string) => {
+    // Set the new locale in cookies
+    Cookies.set("NEXT_LOCALE", newLocale, { expires: 365 });
+
+    // Replace the locale in the current path
+    const pathSegments = pathname.split("/");
+    if (pathSegments[1]) {
+      pathSegments[1] = newLocale; // Replace the locale
+    } else {
+      pathSegments.unshift(newLocale); // Add the locale if not present
+    }
+
+    const newPathname = pathSegments.join("/");
+
+    // Redirect to the updated path
+    router.push(newPathname);
+  };
+
   return (
     <Box className={style.page}>
       <CssBaseline />
@@ -57,12 +85,6 @@ export default function Home({}) {
             aria-label="open drawer"
             onClick={toggleDrawer(true)}
             edge="start"
-            sx={[
-              // {
-              //   mr: 2,
-              // },
-              // open && { display: 'none' },
-            ]}
           >
             <MenuIcon />
           </IconButton>
@@ -72,37 +94,41 @@ export default function Home({}) {
         </Toolbar>
       </AppBar>
       <Drawer open={open} onClose={toggleDrawer(false)}>
-      <DrawerHeader>
+        <DrawerHeader>
           <IconButton onClick={toggleDrawer(false)}>
             {rtl ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
+          <ListItem >
+            <ListItemButton>
+              <ListItemIcon>
+                <LanguageIcon />
+              </ListItemIcon>
+              <ListItemText primary={locale === "he" ? "English" : "עברית"} onClick={() => switchLocale(locale === "he" ? "en" : "he")} />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+          <ListItem>
+            <ListItemButton>
+              <ListItemIcon>
+                <LanguageIcon />
+              </ListItemIcon>
+              <ListItemText primary={locale === "he" ? "English" : "עברית"} onClick={() => switchLocale(locale === "he" ? "en" : "he")} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem>
+            <ListItemButton onClick={() => setMode(theme.palette.mode === 'dark' ? 'light' : 'dark')}>
+              <ListItemIcon>
+                {theme.palette.mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+              </ListItemIcon>
+              <ListItemText primary={theme.palette.mode === 'light' ? dictionary.dark_mode : dictionary.light_mode} />
+            </ListItemButton>
+          </ListItem>
+
         </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+
       </Drawer>
       <main>
         <Items />

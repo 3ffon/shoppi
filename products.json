@@ -27,6 +27,14 @@
   ],
   "products": [
     {
+      "id": "אדממה",
+      "section": "veggies",
+      "quantity": 0,
+      "created": "2025-01-29T15:01:56.369Z",
+      "icon": "",
+      "image": ""
+    },
+    {
       "id": "בצל לבן",
       "section": "veggies",
       "quantity": 1,
@@ -37,39 +45,31 @@
     {
       "id": "בצל סגול",
       "section": "veggies",
-      "quantity": 0,
-      "created": "2025-01-29T01:31:34.780Z",
+      "quantity": 1,
+      "created": "2025-01-29T14:04:05.596Z",
       "icon": "",
       "image": ""
     },
     {
       "id": "מלפפון",
       "section": "veggies",
-      "quantity": 1,
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
-      "id": "עגבניות",
-      "section": "veggies",
       "quantity": 0,
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
-      "id": "עגבניות שרי אדומות",
-      "section": "veggies",
-      "quantity": 1,
-      "created": "2025-01-29T02:21:37.241Z",
+      "created": "2025-01-29T04:20:22.199Z",
       "icon": "",
       "image": ""
     },
     {
+      "id": "עגבניות",
+      "section": "veggies",
+      "quantity": 1,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
       "id": "קולה זירו 1ל",
       "section": "drinks",
-      "quantity": 1,
+      "quantity": 0,
       "icon": "",
       "image": "",
       "created": ""

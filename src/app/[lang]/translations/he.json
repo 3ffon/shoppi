@@ -5,6 +5,12 @@
     "section": "קטגוריה",
     "save": "שמור",
     "add_item": "הוסף מוצר",
+    "add_item_title": "טופס הוספת מוצר",
     "item_edit_btn": "ערוך",
-    "item_delete_btn": "מחק"
+    "item_delete_btn": "מחק",
+    "item_delete_dialog": "האם ברצונך למחוק את",
+    "item_delete_dialog_confirm": "אישור",
+    "item_delete_dialog_cancel": "ביטול",
+    "dark_mode": "מצב חושך",
+    "light_mode": "מצב בהיר"
 }
