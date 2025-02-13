@@ -15,7 +15,7 @@ export async function GET() {
   const items = db?.products.sort((a, b) => {
     const sectionA = sectionsMap[a.section];
     const sectionB = sectionsMap[b.section];
-    return (sectionA?.order || 0) - (sectionB?.order || 0) || a.id.localeCompare(b.id);
+    return (sectionA?.order || 999) - (sectionB?.order || 999) || a.id.localeCompare(b.id);
   });
 
   if (!items) {

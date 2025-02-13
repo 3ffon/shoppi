@@ -23,53 +23,17 @@
       "name": "מוצרי חלב",
       "order": 3,
       "collapse": true
+    },
+    {
+      "id": "nokg3ckhioi",
+      "name": "קפואים"
     }
   ],
   "products": [
     {
-      "id": "אדממה",
-      "section": "veggies",
-      "quantity": 0,
-      "created": "2025-01-29T15:01:56.369Z",
-      "icon": "",
-      "image": ""
-    },
-    {
-      "id": "בצל לבן",
-      "section": "veggies",
-      "quantity": 1,
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
-      "id": "בצל סגול",
-      "section": "veggies",
-      "quantity": 1,
-      "created": "2025-01-29T14:04:05.596Z",
-      "icon": "",
-      "image": ""
-    },
-    {
-      "id": "מלפפון",
-      "section": "veggies",
-      "quantity": 0,
-      "created": "2025-01-29T04:20:22.199Z",
-      "icon": "",
-      "image": ""
-    },
-    {
-      "id": "עגבניות",
-      "section": "veggies",
-      "quantity": 1,
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
       "id": "קולה זירו 1ל",
       "section": "drinks",
-      "quantity": 0,
+      "quantity": 1,
       "icon": "",
       "image": "",
       "created": ""
@@ -107,6 +71,14 @@
       "created": ""
     },
     {
+      "id": "חלב עמיד",
+      "section": "dairy",
+      "quantity": 1,
+      "created": "2025-01-30T13:05:31.434Z",
+      "icon": "",
+      "image": ""
+    },
+    {
       "id": "יוגורט פרו ירוק",
       "section": "dairy",
       "quantity": 1,
@@ -129,6 +101,46 @@
       "icon": "",
       "image": "",
       "created": ""
+    },
+    {
+      "id": "בצל לבן",
+      "section": "veggies",
+      "quantity": 0,
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "בצל סגול",
+      "section": "veggies",
+      "quantity": 0,
+      "created": "2025-01-29T14:04:05.596Z",
+      "icon": "",
+      "image": ""
+    },
+    {
+      "id": "בצל צהוב",
+      "section": "veggies",
+      "quantity": 0,
+      "created": "2025-02-10T21:51:45.799Z",
+      "icon": "",
+      "image": ""
+    },
+    {
+      "id": "מלפפון",
+      "section": "veggies",
+      "quantity": 1,
+      "created": "2025-01-29T04:20:22.199Z",
+      "icon": "",
+      "image": ""
+    },
+    {
+      "id": "עגבניה 🍅",
+      "section": "veggies",
+      "quantity": 0,
+      "created": "2025-01-31T00:21:48.836Z",
+      "icon": "",
+      "image": ""
     }
   ]
 }

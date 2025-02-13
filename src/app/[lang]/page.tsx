@@ -1,138 +1,423 @@
-"use client";
-import * as React from 'react'
-import Items from '../components/ProductList/items';
-import {
-  AppBar,
-  Box,
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  styled,
-  Toolbar,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import { useColorScheme } from '@mui/material/styles';
-import {
-  Menu as MenuIcon,
-  ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
-  Language as LanguageIcon,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon,
-} from "@mui/icons-material";
-import CssBaseline from '@mui/material/CssBaseline';
-import { useDictionary } from './DictionaryProvider';
-import Cookies from "js-cookie";
-import style from './page.module.css';
-import { usePathname, useRouter } from 'next/navigation';
+"use client"
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: 'flex-start',
-}));
+import React, { useEffect, useCallback } from 'react'
+import {
+    Box,
+    Button,
+    InputAdornment,
+    List,
+    ListItem,
+    ListItemButton,
+    MenuItem,
+    TextField,
+    Menu,
+    Dialog,
+    DialogActions,
+    DialogTitle,
+    IconButton,
+    styled,
+    Badge,
+    badgeClasses,
+} from '@mui/material';
+
+import {
+    Add as AddIcon,
+    Clear as ClearIcon,
+    DeleteOutlined as DeleteIcon,
+    Tune as TuneIcon,
+} from '@mui/icons-material';
+import style from './page.module.css';
+import Checkbox from '@mui/material/Checkbox';
+import { ProductInterface, SectionInterface } from '../lib/interfaces';
+import { fetchDb, updateProduct, deleteProduct } from '../lib/apiClient';
+import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
+import { debounce } from 'lodash';
+import { useDictionary } from '@/app/[lang]/DictionaryProvider';
+import ItemForm from '../components/Forms/ItemForm'
+
+async function fetchProducts() {
+    const response = await fetchDb();
+    return response;
+}
+
+const CartBadge = styled(Badge)`
+  & .${badgeClasses.badge} {
+    top: -12px;
+    right: -6px;
+  }
+`;
+
+function AddOrEditItem({ ...props }) {
+    const {
+        show,
+        addItem,
+    } = props;
+
+    const { dictionary } = useDictionary();
+
+    return (
+        <AnimatePresence>
+            {show && (
+                <motion.div
+                    className={style.item_add}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    <Button
+                        onClick={addItem}
+                        variant="contained"
+                        color="primary"
+                    >
+                        {dictionary.item_add_btn} <AddIcon />
+                    </Button>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    )
+}
+
+interface ItemProps {
+    item: ProductInterface;
+    section: SectionInterface;
+    sections: { [key: string]: SectionInterface };
+    updateItems: () => Promise<void>;
+    isDragging: boolean;
+    setIsDragging: (isDragging: boolean) => void;
+    handleAddEditProduct: () => Promise<void>;
+}
+
+function Item({ ...props }: ItemProps) {
+    const {
+        sections,
+        section,
+        updateItems,
+        isDragging,
+        setIsDragging,
+        handleAddEditProduct,
+    } = props;
+
+    const { dictionary } = useDictionary();
+    const [item, setItem] = React.useState(props.item);
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
+    const [contextMenu, setContextMenu] = React.useState<{
+        mouseX: number;
+        mouseY: number;
+    } | null>(null);
+    const [isSwiped, setIsSwiped] = React.useState(false);
+    const [longPressTimer, setLongPressTimer] = React.useState<NodeJS.Timeout | null>(null);
+    const [openEditModal, setOpenEditModal] = React.useState(false);
+
+    const x = useMotionValue(0);
+    const buttonWidth = useTransform(x, [0, 100], [0, 70]);
+
+    const handleDragEnd = (event: TouchEvent | MouseEvent | PointerEvent, info: PanInfo) => {
+        resetSwipeState(info.offset.x > 100);
+    };
+
+    const [startCoords, setStartCoords] = React.useState({ x: 0, y: 0 });
+
+    const handleTouchStart = (event: React.TouchEvent) => {
+        setStartCoords({ x: event.touches[0].clientX, y: event.touches[0].clientY });
+        console.log('start', startCoords);
+        const timer = setTimeout(() => {
+            setOpenEditModal(true);
+        }, 500);
+        setLongPressTimer(timer);
+    };
+
+    const handleTouchMove = (event: React.TouchEvent) => {
+        const currentX = event.touches[0].clientX;
+        const currentY = event.touches[0].clientY;
+
+        if (Math.abs(currentX - startCoords.x) > 1 && Math.abs(currentY - startCoords.y) > 1) {
+            if (longPressTimer) {
+                console.log('cancel', currentX, startCoords.x, currentY, startCoords.y);
+                clearTimeout(longPressTimer);
+                setLongPressTimer(null);
+            }
+        }
+    };
+
+    const handleTouchEnd = () => {
+        if (longPressTimer) {
+            clearTimeout(longPressTimer);
+            setLongPressTimer(null);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('click', () => resetSwipeState());
+        return () => document.removeEventListener('click', () => resetSwipeState());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSwiped, x]);
+
+    const resetSwipeState = (state = false) => {
+        setIsSwiped(state);
+        setIsDragging(state);
+        animate(x, state ? 100 : 0, { type: "spring", stiffness: 300, damping: 30 });
+    };
+
+    const updateItem = async (data: ProductInterface) => {
+        setItem(data);
+        await updateProduct(data.id, data);
+    };
+
+    const handleContextMenu = (event: React.MouseEvent) => {
+        event.preventDefault();
+        setContextMenu(
+            contextMenu === null
+                ? {
+                    mouseX: event.clientX + 2,
+                    mouseY: event.clientY - 6,
+                }
+                : null,
+        );
+    };
+
+    const handleContextMenuClose = () => {
+        setContextMenu(null);
+    };
+
+    return (
+        <Box sx={{ position: 'relative', overflow: 'hidden', width: '100%' }}>
+            <motion.div
+                drag="x"
+                dragConstraints={{ left: 0, right: 70 }}
+                onDragEnd={handleDragEnd}
+                dragElastic={0.2}
+                dragMomentum={false}
+                style={{ x }} // Applies translation to both elements
+                onClick={(e) => e.stopPropagation()}
+            >
+                <ListItem key={`item-${section}-${item.id}`}>
+                    <ListItemButton
+                        sx={{
+                            fontWeight: 'bold',
+                            justifyContent: "space-between",
+
+                        }}
+                        onContextMenu={handleContextMenu}
+                        onClick={(e) => {
+                            if (isSwiped || isDragging) {
+                                return e.stopPropagation();
+                            }
+                            const updatedItem = {
+                                ...item,
+                                quantity: item.quantity > 0 ? 0 : 1
+                            };
+                            updateItem(updatedItem);
+                        }}
+                        onTouchStart={handleTouchStart}
+                        onTouchEnd={handleTouchEnd}
+                        onTouchMove={handleTouchMove}
+                    >
+                        <div style={{ display: 'grid' }}>
+                            {item.id}
+                            <small>{section ? section.name : dictionary.no_section}</small>
+                        </div>
+                        <Checkbox
+                            sx={{
+                                pointerEvents: "none",
+                            }}
+                            checked={item.quantity > 0}
+                        />
+                    </ListItemButton>
+                    <Menu
+                        open={contextMenu !== null}
+                        onClose={handleContextMenuClose}
+                        anchorReference="anchorPosition"
+                        anchorPosition={
+                            contextMenu !== null
+                                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                                : undefined
+                        }
+                    >
+                        <MenuItem onClick={() => {
+                            setOpenEditModal(true);
+                            handleContextMenuClose();
+                        }}>{dictionary.edit_btn}</MenuItem>
+                        <MenuItem onClick={async () => {
+                            setOpenDeleteDialog(true);
+                            handleContextMenuClose();
+                        }}>{dictionary.delete_btn}</MenuItem>
+                    </Menu>
+                </ListItem>
+            </motion.div>
+
+            <motion.div
+                className={style.delete_button_wrapper}
+                style={{
+                    width: buttonWidth,
+                    pointerEvents: isSwiped ? 'auto' : 'none',
+                }}
+            >
+                <Button
+                    className={style.delete_button}
+                    variant="contained"
+                    color="error"
+                    onClick={async () => {
+                        setOpenDeleteDialog(true);
+                    }}
+                >
+                    <DeleteIcon />
+                </Button>
+            </motion.div>
+            <Dialog
+                open={openDeleteDialog}
+                onClose={() => {
+                    setOpenDeleteDialog(false);
+                    resetSwipeState();
+                }}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {dictionary.dialog_delete_txt} {item.id} ?
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={() => {
+                        setOpenDeleteDialog(false);
+                        resetSwipeState();
+                    }}>{dictionary.cancel_btn}</Button>
+                    <Button onClick={async () => {
+                        await deleteProduct(item.id);
+                        await updateItems();
+                        setOpenDeleteDialog(false);
+                    }} autoFocus>
+                        {dictionary.confirm_btn}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <ItemForm
+                sections={sections}
+                additionalOnSubmit={handleAddEditProduct}
+                defaultValue={item.id}
+                item={item}
+                addItemOpen={openEditModal}
+                setAddItemOpen={setOpenEditModal}
+            />
+        </Box>
+    );
+}
 
 export default function Home({ }) {
-  const pathname = usePathname();
-  const router = useRouter();
-  const theme = useTheme();
-  const { setMode } = useColorScheme();
-  const { dictionary, locale } = useDictionary();
-  const rtl = locale === 'he';
-  const [open, setOpen] = React.useState(false);
+    const { dictionary } = useDictionary();
+    const [items, setItems] = React.useState<ProductInterface[]>([]);
+    const [sections, setSections] = React.useState<{ [key: string]: SectionInterface }>({});
+    const [searctInput, setSearchInput] = React.useState('');
+    const [search, setSearch] = React.useState('');
+    const [addItemOpen, setAddItemOpen] = React.useState(false);
+    const [isDragging, setIsDragging] = React.useState(false);
+    const filteredProducts = items?.filter((product: ProductInterface) =>
+        product.id.toLowerCase().includes(search.toLowerCase())
+    );
 
-  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-    if (event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
-      return;
-    }
-    setOpen(open);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const debouncedSetSearch = useCallback(debounce(setSearch, 150), []);
 
-  const switchLocale = (newLocale: string) => {
-    // Set the new locale in cookies
-    Cookies.set("NEXT_LOCALE", newLocale, { expires: 365 });
+    useEffect(() => {
+        return () => {
+            debouncedSetSearch.cancel();
+        }
+    }, [debouncedSetSearch]);
 
-    // Replace the locale in the current path
-    const pathSegments = pathname.split("/");
-    if (pathSegments[1]) {
-      pathSegments[1] = newLocale; // Replace the locale
-    } else {
-      pathSegments.unshift(newLocale); // Add the locale if not present
-    }
+    useEffect(() => {
+        fetchProducts().then(response => {
+            setItems(response.items);
+            setSections(response.sections);
+        });
+    }, []);
 
-    const newPathname = pathSegments.join("/");
+    const addItem = () => {
+        setAddItemOpen(true);
+    };
 
-    // Redirect to the updated path
-    router.push(newPathname);
-  };
+    const handleAddEditProduct = async () => {
+        await updateItems();
+        setAddItemOpen(false);
+        setSearchInput('');
+        setSearch('');
+    };
 
-  return (
-    <Box className={style.page}>
-      <CssBaseline />
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={toggleDrawer(true)}
-            edge="start"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {dictionary.title}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
-        <DrawerHeader>
-          <IconButton onClick={toggleDrawer(false)}>
-            {rtl ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          <ListItem >
-            <ListItemButton>
-              <ListItemIcon>
-                <LanguageIcon />
-              </ListItemIcon>
-              <ListItemText primary={locale === "he" ? "English" : "עברית"} onClick={() => switchLocale(locale === "he" ? "en" : "he")} />
-            </ListItemButton>
-          </ListItem>
-          <Divider />
-          <ListItem>
-            <ListItemButton>
-              <ListItemIcon>
-                <LanguageIcon />
-              </ListItemIcon>
-              <ListItemText primary={locale === "he" ? "English" : "עברית"} onClick={() => switchLocale(locale === "he" ? "en" : "he")} />
-            </ListItemButton>
-          </ListItem>
-          <ListItem>
-            <ListItemButton onClick={() => setMode(theme.palette.mode === 'dark' ? 'light' : 'dark')}>
-              <ListItemIcon>
-                {theme.palette.mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-              </ListItemIcon>
-              <ListItemText primary={theme.palette.mode === 'light' ? dictionary.dark_mode : dictionary.light_mode} />
-            </ListItemButton>
-          </ListItem>
+    const updateItems = async () => {
+        const response = await fetchProducts();
+        setItems(response.items);
+        setSections(response.sections);
+    };
 
-        </List>
+    return (
+        <div className={style.component_wrapper}>
+            <div className={style.search_wrapper}>
+                <TextField
+                    id="item-search"
+                    label={dictionary.search_input}
+                    variant="outlined"
+                    className={style.search}
+                    value={searctInput}
+                    autoComplete='off'
+                    slotProps={{
+                        input: {
+                            endAdornment: search.length > 0 && <InputAdornment position="end">
+                                <ClearIcon sx={{ cursor: 'pointer' }} onClick={() => {
+                                    setSearch('')
+                                    setSearchInput('')
+                                }} />
+                            </InputAdornment>
+                        },
+                    }}
+                    onChange={e => {
+                        setSearchInput(e.target.value);
+                        debouncedSetSearch(e.target.value);
+                    }}
+                />
+                <IconButton className={style.tune_button}>
+                    <TuneIcon sx={{ fontSize: 30 }} />
+                    <CartBadge badgeContent={2} color="primary" overlap="circular" />
+                </IconButton>
+            </div>
+            
+            <AddOrEditItem show={search.length > 0} addItem={addItem} />
 
-      </Drawer>
-      <main>
-        <Items />
-      </main>
-    </Box>
-  );
+            <div className={style.list_wrapper}>
+                <List
+                    className={style.list}
+                    subheader={<li />}
+                >
+                    <AnimatePresence>
+                        {filteredProducts?.map((item) => (
+                            <motion.div
+                                key={item.id}
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <Item
+                                    key={item.id}
+                                    item={item}
+                                    section={sections[item.section]}
+                                    updateItems={updateItems}
+                                    isDragging={isDragging}
+                                    setIsDragging={setIsDragging}
+                                    sections={sections}
+                                    handleAddEditProduct={handleAddEditProduct}
+                                />
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </List>
+            </div>
+
+            <ItemForm
+                sections={sections}
+                additionalOnSubmit={handleAddEditProduct}
+                defaultValue={searctInput.trim()}
+                item={undefined}
+                addItemOpen={addItemOpen}
+                setAddItemOpen={setAddItemOpen}
+            />
+        </div>
+    );
 }

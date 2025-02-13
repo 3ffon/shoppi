@@ -2,8 +2,8 @@ import React from "react";
 import MuiThemeProvider from "./MuiThemeProvider";
 import { getDictionary } from "./translation";
 import { DictionaryProvider } from "./DictionaryProvider";
-
-
+import style from "./layout.module.css";
+import Menu from "../components/Menu/Menu";
 export function generateViewport({ }) {
   return {
     width: 'device-width',
@@ -30,9 +30,11 @@ export default async function RootLayout({
   return (
     <html lang={lang} dir={rtl ? "rtl" : "ltr"}>
       <MuiThemeProvider rtl={rtl}>
-        <body style={{ overflow: "hidden", overscrollBehavior: "contain" }}>
+        <body className={style.body}>
           <DictionaryProvider dictionary={dict} locale={lang}>
-            {children}
+            <Menu>
+              {children}
+            </Menu>
           </DictionaryProvider>
         </body>
       </MuiThemeProvider>

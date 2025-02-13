@@ -9,6 +9,11 @@ export const fetchDb = async (): Promise<ApiResponseInterface> => {
     return response.data;
 };
 
+export const fetchSections = async (): Promise<SectionInterface[]> => {
+    const response: AxiosResponse<SectionInterface[]> = await axiosClient.get('/api/sections');
+    return response.data;
+};
+
 // Update a product in db
 export const updateProduct = async (id: string, product: ProductInterface): Promise<ProductInterface> => {
   // encode id

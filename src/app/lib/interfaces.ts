@@ -12,8 +12,8 @@ export interface ProductInterface {
 export interface SectionInterface {
   id: string;
   name: string;
-  order: number;
-  collapse: boolean;
+  order?: number;
+  collapse?: boolean;
 }
 
 // DBReseponseInterface - schema of a full db response

@@ -1,16 +1,30 @@
 {
-    "title": "Shoppi",
-    "search_input": "Product search",
+    "app_title": "Shoppi",
+    "search_input": "Search for product or write to add",
     "product_id": "Product Name",
-    "section": "Section",
-    "save": "Save",
-    "add_item": "Add Product",
-    "add_item_title": "Add Product Form",
-    "item_edit_btn": "Edit",
-    "item_delete_btn": "Delete",
-    "item_delete_dialog": "Confirm deleting",
-    "item_delete_dialog_confirm": "Confirm",
-    "item_delete_dialog_cancel": "Cancel",
+
+    "section_management": "Section Management",
+    "section_label": "Select Section",
+    "section_new_label": "Create New Section",
+    "section_new_title": "Create Section",
+    "section_edit_title": "Edit Section",
+
+    "item_management": "Item Management",
+    "item_add_btn": "Add Product",
+    "item_add_title": "Add Product Form",
+    "item_edit_title": "Edit Product Form",
+
     "dark_mode": "Dark Mode",
-    "light_mode": "Light Mode"
+    "light_mode": "Light Mode",
+
+    "dialog_delete_txt": "Are you sure you want to delete",
+
+    "edit_btn": "Edit",
+    "delete_btn": "Delete",
+    "cancel_btn": "Cancel",
+    "confirm_btn": "Confirm",
+    "save_btn": "Save",
+    "create_btn": "Create",
+    "no_section": "No Section"
+    
 }

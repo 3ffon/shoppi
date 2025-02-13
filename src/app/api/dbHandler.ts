@@ -7,6 +7,10 @@ class DBHandler {
 
     constructor(path: string) {
         this.dbPath = path;
+        this._readDB();
+    }
+
+    _readDB() {
         const data = fs.readFileSync(this.dbPath);
         this.db = JSON.parse(data.toString());
     }
@@ -14,6 +18,7 @@ class DBHandler {
     updateDB() {
         try {
             fs.writeFileSync(this.dbPath, JSON.stringify(this.db, null, 2));
+            this._readDB();
         } catch(err) {
             throw err;
         }
@@ -21,6 +26,10 @@ class DBHandler {
 
     getDB() {
         return this.db;
+    }
+
+    getSections() {
+        return this.db?.sections;
     }
 
     createProduct(product: ProductInterface) {
@@ -66,9 +75,9 @@ class DBHandler {
         return section_ref;
     }
 
-    deleteSection(section: SectionInterface) {
+    deleteSection(sectionId: string) {
         if (this.db) {
-            this.db.sections = this.db.sections.filter(sect => sect.id !== section.id);
+            this.db.sections = this.db.sections.filter(sect => sect.id !== sectionId);
             this.updateDB();
         }
     }

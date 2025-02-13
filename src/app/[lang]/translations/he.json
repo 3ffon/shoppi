@@ -1,16 +1,29 @@
 {
-    "title": "קניות-לי",
-    "search_input": "חפש או הוסף מוצר",
+    "app_title": "קניות-לי",
+    "search_input": "חפש מוצר או כתוב להוספה",
     "product_id": "שם מוצר",
-    "section": "קטגוריה",
-    "save": "שמור",
-    "add_item": "הוסף מוצר",
-    "add_item_title": "טופס הוספת מוצר",
-    "item_edit_btn": "ערוך",
-    "item_delete_btn": "מחק",
-    "item_delete_dialog": "האם ברצונך למחוק את",
-    "item_delete_dialog_confirm": "אישור",
-    "item_delete_dialog_cancel": "ביטול",
+    
+    "section_management": "קטגוריות",
+    "section_label": "בחר קטגוריה",
+    "section_new_label": "הוספת קטגוריה חדשה",
+    "section_new_title": "הוספת קטגוריה חדשה",
+    "section_edit_title": "עריכת קטגוריה",
+    
+    "item_management": "הקניות שלי",
+    "item_add_btn": "הוסף מוצר",
+    "item_add_title": "הוספת מוצר",
+    "item_edit_title": "עריכת מוצר",
+    
     "dark_mode": "מצב חושך",
-    "light_mode": "מצב בהיר"
+    "light_mode": "מצב בהיר",
+    
+    "dialog_delete_txt": "האם ברצונך למחוק את",
+
+    "edit_btn": "ערוך",
+    "delete_btn": "מחק",
+    "cancel_btn": "ביטול",
+    "confirm_btn": "אישור",
+    "save_btn": "שמור",
+    "create_btn": "צור",
+    "no_section": "ללא קטגוריה"
 }
