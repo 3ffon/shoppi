@@ -8,35 +8,27 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import style from "./forms.module.css";
-import { useDictionary } from "../../[lang]/DictionaryProvider";
+import { useDictionary } from "../../[lang]/Providers/DictionaryProvider";
 import { SectionInterface } from "../../lib/interfaces";
+import { generateId } from "../../lib/utils";
 import React from "react";
 
 interface SectionFormProps {
     section: SectionInterface | undefined;
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    defaultValue: string;
     addSectionOpen: boolean;
     setAddSectionOpen: (open: boolean) => void;
 }
 
-// random id generator for new section
-const generateId = () => {
-    return Math.random().toString(36).substring(2, 15);
-}
-
 export default function SectionForm({ ...props }: SectionFormProps) {
     const {
-        section,
+        // section,
         onSubmit,
-        defaultValue,
-        addSectionOpen,
-        setAddSectionOpen
     } = props;
 
     const theme = useTheme();
     const { dictionary } = useDictionary();
-    const isEdit = section !== undefined;
+    // const isEdit = section !== undefined;
 
 
     const [openSectionForm, toggleSectionFormOpen] = React.useState(false);
@@ -45,10 +37,10 @@ export default function SectionForm({ ...props }: SectionFormProps) {
         name: "",
     });
 
-    const handleSectionFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        toggleSectionFormOpen(false);
-    }
+    // const handleSectionFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     toggleSectionFormOpen(false);
+    // }
 
     return (
         <Modal open={openSectionForm} onClose={() => toggleSectionFormOpen(false)}>

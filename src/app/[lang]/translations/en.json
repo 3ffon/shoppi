@@ -1,18 +1,32 @@
 {
     "app_title": "Shoppi",
     "search_input": "Search for product or write to add",
-    "product_id": "Product Name",
+    "product_name": "Product Name",
+
+    "shopping_list": "Shopping Cart",
 
     "section_management": "Section Management",
     "section_label": "Select Section",
     "section_new_label": "Create New Section",
     "section_new_title": "Create Section",
     "section_edit_title": "Edit Section",
+    "section_add_success": "Section added successfully",
+    "section_add_failed": "Failed to add section",
+    "section_edit_success": "Section updated successfully",
+    "section_edit_failed": "Failed to update section",
+    "section_delete_success": "Section deleted successfully",
+    "section_delete_failed": "Failed to delete section",
 
     "item_management": "Item Management",
     "item_add_btn": "Add Product",
     "item_add_title": "Add Product Form",
     "item_edit_title": "Edit Product Form",
+    "item_add_success": "Product added successfully",
+    "item_add_failed": "Failed to add product",
+    "item_edit_success": "Product updated successfully",
+    "item_edit_failed": "Failed to update product",
+    "item_delete_success": "Product deleted successfully",
+    "item_delete_failed": "Failed to delete product",
 
     "dark_mode": "Dark Mode",
     "light_mode": "Light Mode",

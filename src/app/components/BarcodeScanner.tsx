@@ -1,18 +1,18 @@
 "use client";
-import { useRef, useState, useEffect } from 'react';
-import Quagga from '@ericblade/quagga2';
+import { useRef, useState, useEffect } from "react";
+import Quagga from "@ericblade/quagga2";
 import {
     Button,
     Dialog,
     DialogTitle,
     DialogContent,
     Typography
-} from '@mui/material';
+} from "@mui/material";
 
 export default function BarcodeScanner() {
     const [open, setOpen] = useState(false);
     const [scanning, setScanning] = useState(false);
-    const [scannedResult, setScannedResult] = useState('');
+    const [scannedResult, setScannedResult] = useState("");
     const scannerRef = useRef(null);
 
     useEffect(() => {
@@ -34,30 +34,30 @@ export default function BarcodeScanner() {
         Quagga.init(
             {
                 inputStream: {
-                    name: 'Live',
-                    type: 'LiveStream',
+                    name: "Live",
+                    type: "LiveStream",
                     target: scannerRef.current, // Pass the DOM element where the camera feed will be shown
                     constraints: {
                         width: 640,
                         height: 480,
-                        facingMode: 'environment', // Try to use the rear camera
+                        facingMode: "environment", // Try to use the rear camera
                     },
                     singleChannel: false
                 },
                 decoder: {
                     // List of active barcode formats:
                     readers: [
-                        // 'code_128_reader',
-                        'ean_reader',
-                        // 'ean_8_reader',
-                        'upc_reader',
-                        // 'upc_e_reader',
+                        // "code_128_reader",
+                        "ean_reader",
+                        // "ean_8_reader",
+                        "upc_reader",
+                        // "upc_e_reader",
                     ],
                 },
             },
             (err) => {
                 if (err) {
-                    console.error('Quagga init error:', err);
+                    console.error("Quagga init error:", err);
                     return;
                 }
                 Quagga.start();
@@ -67,7 +67,8 @@ export default function BarcodeScanner() {
         Quagga.onDetected(onDetected);
     };
 
-    const onDetected = (data) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const onDetected = (data : any) => {
         // data.codeResult.code is the detected barcode value
         setScannedResult(data.codeResult.code);
         // Optionally, stop scanning after a successful read:
@@ -77,9 +78,9 @@ export default function BarcodeScanner() {
 
     const handleOpenDialog = () => {
         setOpen(true);
-        // We won't start scanning until user explicitly clicks "Start Scanning"
+        // We won"t start scanning until user explicitly clicks "Start Scanning"
         // but you could also auto-start scanning here if you prefer
-        setScannedResult('');
+        setScannedResult("");
     };
 
     const handleCloseDialog = () => {
@@ -94,7 +95,7 @@ export default function BarcodeScanner() {
             setScanning(false);
         } else {
             // Start scanning
-            setScannedResult('');
+            setScannedResult("");
             setScanning(true);
         }
     };
@@ -114,17 +115,17 @@ export default function BarcodeScanner() {
                 <DialogTitle>Scan a Barcode</DialogTitle>
                 <DialogContent>
                     <Typography variant="body2" mb={2}>
-                        Click "Start Scanning" to access your camera and detect barcodes.
+                        Click &quot;Start Scanning&quot; to access your camera and detect barcodes.
                     </Typography>
 
                     <div
                         ref={scannerRef}
                         style={{
-                            width: '100%',
+                            width: "100%",
                             height: 400,
-                            background: '#ccc', // fallback background
-                            position: 'relative',
-                            overflow: 'hidden'
+                            background: "#ccc", // fallback background
+                            position: "relative",
+                            overflow: "hidden"
                         }}
                     />
 
@@ -140,7 +141,7 @@ export default function BarcodeScanner() {
                         onClick={handleToggleScanning}
                         sx={{ mt: 2 }}
                     >
-                        {scanning ? 'Stop Scanning' : 'Start Scanning'}
+                        {scanning ? "Stop Scanning" : "Start Scanning"}
                     </Button>
                 </DialogContent>
             </Dialog>

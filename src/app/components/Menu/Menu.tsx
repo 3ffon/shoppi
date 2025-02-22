@@ -26,8 +26,9 @@ import {
   LightMode as LightModeIcon,
   Category as CategoryIcon,
   Checklist as ChecklistIcon,
+  ShoppingCart as ShoppingCartIcon
 } from "@mui/icons-material";
-import { useDictionary } from '../../[lang]/DictionaryProvider';
+import { useDictionary } from '../../[lang]/Providers/DictionaryProvider';
 import Cookies from "js-cookie";
 import style from './menu.module.css';
 import { usePathname, useRouter } from 'next/navigation';
@@ -94,60 +95,79 @@ export default function Menu({ children }: { children: React.ReactNode }) {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
-        <DrawerHeader>
-          <IconButton onClick={toggleDrawer(false)}>
-            {rtl ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          <ListItem onClick={() => {
-            router.push('/');
-            setOpen(false);
+      <nav>
+        <Drawer open={open} onClose={toggleDrawer(false)} ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
           }}>
-            <ListItemButton>
-              <ListItemIcon>
-                <ChecklistIcon />
-              </ListItemIcon>
-              <ListItemText primary={dictionary.item_management} />
-            </ListItemButton>
-          </ListItem>
-          <ListItem onClick={() => {
-            router.push('/sections');
-            setOpen(false);
-          }}>
-            <ListItemButton>
-              <ListItemIcon>
-                <CategoryIcon />
-              </ListItemIcon>
-              <ListItemText primary={dictionary.section_management} />
-            </ListItemButton>
-          </ListItem>
+          <DrawerHeader>
+            <IconButton onClick={toggleDrawer(false)}>
+              {rtl ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </DrawerHeader>
           <Divider />
-          <ListItem onClick={() => switchLocale(locale === "he" ? "en" : "he")}>
-            <ListItemButton>
-              <ListItemIcon>
-                <LanguageIcon />
-              </ListItemIcon>
-              <ListItemText primary={locale === "he" ? "English" : "עברית"} />
-            </ListItemButton>
-          </ListItem>
-          <ListItem>
-            <ListItemButton onClick={() => setMode(theme.palette.mode === 'dark' ? 'light' : 'dark')}>
-              <ListItemIcon>
-                {theme.palette.mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-              </ListItemIcon>
-              <ListItemText primary={theme.palette.mode === 'light' ? dictionary.dark_mode : dictionary.light_mode} />
-            </ListItemButton>
-          </ListItem>
+          <List>
+          <ListItem onClick={() => {
+              router.push('/');
+              setOpen(false);
+            }}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <ShoppingCartIcon />
+                </ListItemIcon>
+                <ListItemText primary={dictionary.shopping_list} />
+              </ListItemButton>
+            </ListItem>
 
-        </List>
+            <ListItem onClick={() => {
+              router.push('/products');
+              setOpen(false);
+            }}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <ChecklistIcon />
+                </ListItemIcon>
+                <ListItemText primary={dictionary.item_management} />
+              </ListItemButton>
+            </ListItem>
 
-      </Drawer>
-      <main className={style.main_wrapper}>
+            <ListItem onClick={() => {
+              router.push('/sections');
+              setOpen(false);
+            }}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary={dictionary.section_management} />
+              </ListItemButton>
+            </ListItem>
+            
+            <Divider />
+            <ListItem onClick={() => switchLocale(locale === "he" ? "en" : "he")}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <LanguageIcon />
+                </ListItemIcon>
+                <ListItemText primary={locale === "he" ? "English" : "עברית"} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem>
+              <ListItemButton onClick={() => setMode(theme.palette.mode === 'dark' ? 'light' : 'dark')}>
+                <ListItemIcon>
+                  {theme.palette.mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
+                </ListItemIcon>
+                <ListItemText primary={theme.palette.mode === 'light' ? dictionary.dark_mode : dictionary.light_mode} />
+              </ListItemButton>
+            </ListItem>
+
+          </List>
+
+        </Drawer>
+      </nav>
+      <Box className={style.main_wrapper} component="main">
+        <Toolbar />
         {children}
-      </main>
+      </Box>
     </Box>
   );
 }

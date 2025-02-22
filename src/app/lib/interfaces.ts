@@ -1,6 +1,7 @@
 // ProductInterface - schema of a product
 export interface ProductInterface {
   id: string;
+  name: string;
   section: string;
   quantity: number;
   icon: string;

@@ -1,7 +1,9 @@
 import React from "react";
 import MuiThemeProvider from "./MuiThemeProvider";
 import { getDictionary } from "./translation";
-import { DictionaryProvider } from "./DictionaryProvider";
+import { DictionaryProvider } from "./Providers/DictionaryProvider";
+import { ProductsProvider } from "./Providers/ProductsProvider";
+import { NotificationProvider } from "./Providers/NotificationProvider";
 import style from "./layout.module.css";
 import Menu from "../components/Menu/Menu";
 export function generateViewport({ }) {
@@ -28,13 +30,17 @@ export default async function RootLayout({
   const dict = await getDictionary(lang);
 
   return (
-    <html lang={lang} dir={rtl ? "rtl" : "ltr"}>
+    <html lang={lang} dir={rtl ? "rtl" : "ltr"} className={style.global}>
       <MuiThemeProvider rtl={rtl}>
-        <body className={style.body}>
+        <body className={style.global}>
           <DictionaryProvider dictionary={dict} locale={lang}>
-            <Menu>
-              {children}
-            </Menu>
+            <NotificationProvider>
+              <ProductsProvider>
+                <Menu>
+                  {children}
+                </Menu>
+              </ProductsProvider>
+            </NotificationProvider>
           </DictionaryProvider>
         </body>
       </MuiThemeProvider>

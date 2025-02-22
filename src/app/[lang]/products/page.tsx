@@ -29,13 +29,13 @@ import {
 } from '@mui/icons-material';
 
 import style from './page.module.css';
-import { ProductInterface } from '../lib/interfaces';
+import { ProductInterface } from '@/app/lib/interfaces';
 import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
 import { useDictionary } from '@/app/[lang]/Providers/DictionaryProvider';
 import { useProducts } from '@/app/[lang]/Providers/ProductsProvider';
 
-import ItemForm from '../components/Forms/ItemForm'
+import ItemForm from '@/app/components/Forms/ItemForm'
 
 const CartBadge = styled(Badge)`
   & .${badgeClasses.badge} {

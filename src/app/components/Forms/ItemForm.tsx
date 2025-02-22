@@ -12,78 +12,88 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 import style from "./forms.module.css";
-import { useDictionary } from "../../[lang]/DictionaryProvider";
+import { useDictionary } from "../../[lang]/Providers/DictionaryProvider";
+import { useProducts } from "../../[lang]/Providers/ProductsProvider";
 import { ProductInterface, SectionInterface } from "../../lib/interfaces";
-import React from "react";
-import { createProduct, createSection, updateProduct } from "../../lib/apiClient";
+import { generateId } from "../../lib/utils";
+import React, { useCallback } from "react";
 
 interface ItemFormProps {
-    item: ProductInterface | undefined;
-    sections: { [key: string]: SectionInterface };
-    additionalOnSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    defaultValue: string;
-    addItemOpen: boolean;
-    setAddItemOpen: (open: boolean) => void;
+    item?: ProductInterface;
+    additionalOnSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+    defaultValue?: string;
+    openModal: boolean;
+    setOpenModal: (open: boolean) => void;
+    onClose?: () => void;
 }
 
-// random id generator for new section
-const generateId = () => {
-    return Math.random().toString(36).substring(2, 15);
-}
+
 
 export default function ItemForm({ ...props }: ItemFormProps) {
     const {
-        sections,
         defaultValue,
         item,
-        addItemOpen,
-        setAddItemOpen,
-        additionalOnSubmit
+        openModal,
+        setOpenModal,
+        additionalOnSubmit,
+        onClose
     } = props;
 
     const isEdit = item !== undefined;
+    const theme = useTheme();
+    const { dictionary } = useDictionary();
+    const [section, setSection] = React.useState<string>(item ? item.section : '');
+    const sectionInputRef = React.useRef<HTMLInputElement>(null);
+    const { sections, updateProduct, createProduct, createSection } = useProducts();
+    console.log('you', item, section);
 
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const cleanStateAndClose = useCallback(() => {
+        setSection('');
+        setOpenModal(false);
+        if (onClose) onClose();
+    }, [onClose, setOpenModal]);
+
+    const onSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('onSubmit', e.currentTarget);
-    
-        const productId = e.currentTarget.productId.value;
-        let sectionSelectorId = e.currentTarget["section-selector"].value;
-        
+
+        const productName = e.currentTarget.productName.value;
+        let newSectionId: string = "";
+
         // if the section is new, create a new section
-        if (sectionSelectorId === "new_category") {
-            sectionSelectorId = generateId();
+        if (section === "new_category") {
+            newSectionId = generateId();
             const newSection: SectionInterface = {
-                id: sectionSelectorId,
+                id: newSectionId,
                 name: e.currentTarget.section.value,
             };
             await createSection(newSection);
         }
-        
+
         if (isEdit) {
             let dirty = false;
-            if (productId !== item.id) {
-                item.id = productId;
+            if (productName !== item.name) {
+                item.name = productName;
                 dirty = true;
             }
-            if (sectionSelectorId !== item.section) {
-                item.section = sectionSelectorId;
+            if (section && section !== item.section) {
+                item.section = newSectionId ? newSectionId : section;
                 dirty = true;
             }
             if (dirty) {
-                await updateProduct(item.id, item);
+                await updateProduct(item);
             }
         }
         else {
             const product: ProductInterface = {
-                id: String(productId).trim(),
-                section: sectionSelectorId,
+                id: generateId(),
+                name: String(productName).trim(),
+                section: newSectionId ? newSectionId : section,
                 quantity: 0,
                 created: new Date().toISOString(),
                 icon: '',
                 image: '',
             };
-            
+
             await createProduct(product);
         }
 
@@ -92,18 +102,22 @@ export default function ItemForm({ ...props }: ItemFormProps) {
             additionalOnSubmit(e);
         }
 
-        setAddItemOpen(false);
-    }
-
-    const theme = useTheme();
-    const { dictionary } = useDictionary();
-    const [section, setSection] = React.useState<string | null>(item ? item.section : null);
-    const sectionInputRef = React.useRef<HTMLInputElement>(null);
+        cleanStateAndClose();
+    }, [
+        isEdit,
+        additionalOnSubmit,
+        cleanStateAndClose,
+        createSection,
+        item,
+        section,
+        updateProduct,
+        createProduct
+    ]);
 
     return (
         <Modal
-            open={addItemOpen}
-            onClose={() => setAddItemOpen(false)}
+            open={openModal}
+            onClose={cleanStateAndClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -121,11 +135,11 @@ export default function ItemForm({ ...props }: ItemFormProps) {
                 <TextField
                     fullWidth
                     required
-                    id="productId"
-                    name="productId"
-                    label={dictionary.product_id}
+                    id="productName"
+                    name="productName"
+                    label={dictionary.product_name}
                     variant="outlined"
-                    defaultValue={defaultValue.trim()}
+                    defaultValue={defaultValue ? defaultValue.trim() : item?.name}
                     autoComplete='off'
                     sx={{ mb: 2 }}
                 />
@@ -139,7 +153,7 @@ export default function ItemForm({ ...props }: ItemFormProps) {
                         id="section-selector"
                         name="section-selector"
                         label={dictionary.section_label}
-                        defaultValue={item ? item.section : ""}
+                        value={section ? section : item ? item.section : ''}
                         onChange={(e) => {
                             setSection(e.target.value);
 
@@ -169,17 +183,17 @@ export default function ItemForm({ ...props }: ItemFormProps) {
                     required
                     id="section"
                     name="section"
-                        label={dictionary.section_new_label}
-                        autoComplete="off"
-                        inputRef={sectionInputRef}
-                        sx={{ mb: 2 }}
-                    />
+                    label={dictionary.section_new_label}
+                    autoComplete="off"
+                    inputRef={sectionInputRef}
+                    sx={{ mb: 2 }}
+                />
                 }
                 <Box display="flex" gap={2}>
                     <Button
                         variant="contained"
                         color="error"
-                        onClick={() => setAddItemOpen(false)}
+                        onClick={() => cleanStateAndClose()}
                         sx={{ flex: 1 }}
                     >{dictionary.cancel_btn}</Button>
 

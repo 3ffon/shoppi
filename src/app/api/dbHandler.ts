@@ -59,6 +59,14 @@ class DBHandler {
     }
 
     createSection(section: SectionInterface) {
+        // if order is not set, set it to the highest order + 1
+        if (section.order === undefined) {
+            const max_order = this.db?.sections.reduce((max, sect) => {
+                return Math.max(max, sect.order || 0);
+            }, 0);
+            section.order = (max_order ?? 0) + 1;
+        }
+
         this.db?.sections.push(section);
         this.updateDB();
     }

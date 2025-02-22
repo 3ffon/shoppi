@@ -15,9 +15,9 @@ export const fetchSections = async (): Promise<SectionInterface[]> => {
 };
 
 // Update a product in db
-export const updateProduct = async (id: string, product: ProductInterface): Promise<ProductInterface> => {
+export const updateProduct = async (product: ProductInterface): Promise<ProductInterface> => {
   // encode id
-  const encodedId = encodeURIComponent(id);
+  const encodedId = encodeURIComponent(product.id);
   const response: AxiosResponse<ProductInterface> = await axiosClient.patch(`/api/products/${encodedId}`, product);
   return response.data;
 };
@@ -29,15 +29,15 @@ export const createProduct = async (product: ProductInterface): Promise<ProductI
 };
 
 // Delete a product in db
-export const deleteProduct = async (id: string): Promise<ProductInterface> => {
-  const encodedId = encodeURIComponent(id);
+export const deleteProduct = async (product: ProductInterface): Promise<ProductInterface> => {
+  const encodedId = encodeURIComponent(product.id);
   const response: AxiosResponse<ProductInterface> = await axiosClient.delete(`/api/products/${encodedId}`);
   return response.data;
 };
 
 // Update a section in db
-export const updateSection = async (id: string, section: SectionInterface): Promise<SectionInterface> => {
-  const encodedId = encodeURIComponent(id);
+export const updateSection = async (section: SectionInterface): Promise<SectionInterface> => {
+  const encodedId = encodeURIComponent(section.id);
   const response: AxiosResponse<SectionInterface> = await axiosClient.patch(`/api/sections/${encodedId}`, section);
   return response.data;
 };
@@ -49,8 +49,8 @@ export const createSection = async (section: SectionInterface): Promise<SectionI
 };
 
 // Delete a section in db
-export const deleteSection = async (id: string): Promise<SectionInterface> => {
-  const encodedId = encodeURIComponent(id);
+export const deleteSection = async (section: SectionInterface): Promise<SectionInterface> => {
+  const encodedId = encodeURIComponent(section.id);
   const response: AxiosResponse<SectionInterface> = await axiosClient.delete(`/api/sections/${encodedId}`);
   return response.data;
 };

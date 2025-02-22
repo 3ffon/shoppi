@@ -15,7 +15,7 @@ import {
     Delete as DeleteIcon,
     Add as AddIcon,
 } from '@mui/icons-material';
-import { useDictionary } from '../DictionaryProvider';
+import { useDictionary } from '../Providers/DictionaryProvider';
 import { SectionInterface } from '@/app/lib/interfaces';
 import { deleteSection, fetchSections } from '@/app/lib/apiClient';
 import SectionForm from '@/app/components/Forms/SectionForm';
@@ -63,8 +63,8 @@ export default function SectionsPage() {
         // TODO: Add API call to update section orders
     };
 
-    const handleDeleteSection = async (sectionId: string) => {
-        await deleteSection(sectionId);
+    const handleDeleteSection = async (section: SectionInterface) => {
+        await deleteSection(section);
         await fetchSections();
     };
 
@@ -105,7 +105,7 @@ export default function SectionsPage() {
                                                     </IconButton>
                                                     <IconButton 
                                                         edge="end"
-                                                        onClick={() => handleDeleteSection(section.id)}
+                                                        onClick={() => handleDeleteSection(section)}
                                                     >
                                                         <DeleteIcon />
                                                     </IconButton>
@@ -135,7 +135,6 @@ export default function SectionsPage() {
                     await fetchSections();
                     setEditSection(undefined);
                 }}
-                defaultValue=""
                 addSectionOpen={addSectionOpen || !!editSection}
                 setAddSectionOpen={(open) => {
                     setAddSectionOpen(open);

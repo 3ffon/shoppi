@@ -8,6 +8,8 @@ const apiClient: AxiosInstance = axios.create({
   withCredentials: true, // Include cookies for cross-origin requests
   headers: {
     "Content-Type": "application/json",
+    "Cache-Control": "no-cache",
+    "Pragma": "no-cache"
   },
 });
 apiClient.interceptors.request.use(
