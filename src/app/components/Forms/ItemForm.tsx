@@ -12,10 +12,10 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 import style from "./forms.module.css";
-import { useDictionary } from "../../[lang]/Providers/DictionaryProvider";
-import { useProducts } from "../../[lang]/Providers/ProductsProvider";
-import { ProductInterface, SectionInterface } from "../../lib/interfaces";
-import { generateId } from "../../lib/utils";
+import { useDictionary } from "@/app/Providers/DictionaryProvider";
+import { useProducts } from "@/app/Providers/ProductsProvider";
+import { ProductInterface, SectionInterface } from "@/app/lib/interfaces";
+import { generateId } from "@/app/lib/utils";
 import React, { useCallback } from "react";
 
 interface ItemFormProps {

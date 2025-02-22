@@ -1,9 +1,9 @@
 import React from "react";
 import MuiThemeProvider from "./MuiThemeProvider";
 import { getDictionary } from "./translation";
-import { DictionaryProvider } from "./Providers/DictionaryProvider";
-import { ProductsProvider } from "./Providers/ProductsProvider";
-import { NotificationProvider } from "./Providers/NotificationProvider";
+import { DictionaryProvider } from "@/app/Providers/DictionaryProvider";
+import { ProductsProvider } from "@/app/Providers/ProductsProvider";
+import { NotificationProvider } from "@/app/Providers/NotificationProvider";
 import style from "./layout.module.css";
 import Menu from "../components/Menu/Menu";
 export function generateViewport({ }) {

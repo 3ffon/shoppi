@@ -28,7 +28,7 @@ import {
   Checklist as ChecklistIcon,
   ShoppingCart as ShoppingCartIcon
 } from "@mui/icons-material";
-import { useDictionary } from '../../[lang]/Providers/DictionaryProvider';
+import { useDictionary } from '@/app/Providers/DictionaryProvider';
 import Cookies from "js-cookie";
 import style from './menu.module.css';
 import { usePathname, useRouter } from 'next/navigation';
@@ -141,7 +141,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
                 <ListItemText primary={dictionary.section_management} />
               </ListItemButton>
             </ListItem>
-            
+
             <Divider />
             <ListItem onClick={() => switchLocale(locale === "he" ? "en" : "he")}>
               <ListItemButton>
