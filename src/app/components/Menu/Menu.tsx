@@ -28,7 +28,7 @@ import {
   Checklist as ChecklistIcon,
   ShoppingCart as ShoppingCartIcon
 } from "@mui/icons-material";
-import { useDictionary } from '@/app/Providers/DictionaryProvider';
+import { useDictionary } from '@/app/providers/DictionaryProvider';
 import Cookies from "js-cookie";
 import style from './menu.module.css';
 import { usePathname, useRouter } from 'next/navigation';

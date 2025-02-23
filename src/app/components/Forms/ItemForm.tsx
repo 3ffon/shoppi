@@ -12,8 +12,8 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 import style from "./forms.module.css";
-import { useDictionary } from "@/app/Providers/DictionaryProvider";
-import { useProducts } from "@/app/Providers/ProductsProvider";
+import { useDictionary } from "@/app/providers/DictionaryProvider";
+import { useProducts } from "@/app/providers/ProductsProvider";
 import { ProductInterface, SectionInterface } from "@/app/lib/interfaces";
 import { generateId } from "@/app/lib/utils";
 import React, { useCallback } from "react";

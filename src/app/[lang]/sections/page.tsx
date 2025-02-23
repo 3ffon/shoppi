@@ -15,7 +15,7 @@ import {
     Delete as DeleteIcon,
     Add as AddIcon,
 } from '@mui/icons-material';
-import { useDictionary } from '@/app/Providers/DictionaryProvider';
+import { useDictionary } from '@/app/providers/DictionaryProvider';
 import { SectionInterface } from '@/app/lib/interfaces';
 import { deleteSection, fetchSections } from '@/app/lib/apiClient';
 import SectionForm from '@/app/components/Forms/SectionForm';

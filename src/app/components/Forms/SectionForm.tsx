@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import style from "./forms.module.css";
-import { useDictionary } from "@/app/Providers/DictionaryProvider";
+import { useDictionary } from "@/app/providers/DictionaryProvider";
 import { SectionInterface } from "@/app/lib/interfaces";
 import { generateId } from "@/app/lib/utils";
 import React from "react";
