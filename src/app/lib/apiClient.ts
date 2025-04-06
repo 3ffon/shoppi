@@ -1,6 +1,12 @@
 import axiosClient from "./axiosClient";
 import { AxiosResponse } from "axios";
-import { ApiResponseInterface, ProductInterface, SectionInterface } from "./interfaces";
+import { 
+  ApiResponseInterface, 
+  ProductInterface,
+  SectionInterface, 
+  CartInterface, 
+  CartItemInterface 
+} from "./interfaces";
 
 
 // Fetch initial db
@@ -52,5 +58,31 @@ export const createSection = async (section: SectionInterface): Promise<SectionI
 export const deleteSection = async (section: SectionInterface): Promise<SectionInterface> => {
   const encodedId = encodeURIComponent(section.id);
   const response: AxiosResponse<SectionInterface> = await axiosClient.delete(`/api/sections/${encodedId}`);
+  return response.data;
+};
+
+// Cart API functions
+export const updateCart = async (cart: CartInterface): Promise<CartInterface> => {
+  const response = await axiosClient.put(`/api/carts/${cart.id}`, cart);
+  return response.data;
+};
+
+export const updateCartItem = async (cartId: string, cartItem: CartItemInterface): Promise<CartItemInterface> => {
+  const response = await axiosClient.put(`/api/carts/${cartId}/items/${cartItem.id}`, cartItem);
+  return response.data;
+};
+
+export const addCartItem = async (cartId: string, cartItem: CartItemInterface): Promise<CartItemInterface> => {
+  const response = await axiosClient.post(`/api/carts/${cartId}/items`, cartItem);
+  return response.data;
+};
+
+export const removeCartItem = async (cartId: string, cartItemId: string): Promise<CartItemInterface> => {
+  const response = await axiosClient.delete(`/api/carts/${cartId}/items/${cartItemId}`);
+  return response.data;
+};
+
+export const clearCart = async (cartId: string): Promise<CartItemInterface[]> => {
+  const response = await axiosClient.delete(`/api/carts/${cartId}/items`);
   return response.data;
 };

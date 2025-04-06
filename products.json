@@ -95,89 +95,7 @@
       "id": "p6q7r8s9t0",
       "name": "בצל ירוק",
       "section": "veggies",
-      "quantity": 0,
       "created": "2025-02-14T00:15:34.643Z",
-      "icon": "",
-      "image": ""
-    },
-    {
-      "id": "87qz3sl92eu",
-      "name": "עגבניות שרי ליקופן",
-      "section": "veggies",
-      "quantity": 0,
-      "created": "2025-02-21T10:54:19.476Z",
-      "icon": "",
-      "image": ""
-    },
-    {
-      "id": "e1f2g3h4i5",
-      "name": "קולה זירו 1ל",
-      "section": "drinks",
-      "quantity": 0,
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
-      "id": "j6k7l8m9n0",
-      "name": "שישיית מים 0.5ל",
-      "section": "drinks",
-      "quantity": 0,
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
-      "id": "o1p2q3r4s5",
-      "name": "שישיית מים 1.5ל",
-      "section": "drinks",
-      "quantity": 0,
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
-      "id": "i1j2k3l4m5",
-      "name": "צהובה מגורדת 28%",
-      "section": "dairy",
-      "quantity": 0,
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
-      "id": "wvrcfwh69uq",
-      "name": "בשר טחון",
-      "section": "065499elky7",
-      "quantity": 0,
-      "created": "2025-02-16T23:50:42.704Z",
-      "icon": "",
-      "image": ""
-    },
-    {
-      "id": "d6e7f8g9h0",
-      "name": "יוגורט פרו ירוק",
-      "section": "p93aoqu1oxf",
-      "quantity": 0,
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
-      "id": "o4ehjodsjcj",
-      "name": "asdfj",
-      "section": "nlqwh6kr1jk",
-      "quantity": 0,
-      "created": "2025-02-19T23:06:12.480Z",
-      "icon": "",
-      "image": ""
-    },
-    {
-      "id": "t215toe7",
-      "name": "טרלהלהלה",
-      "section": "nlqwh6kr1jk",
-      "quantity": 0,
-      "created": "2025-02-19T23:09:10.331Z",
       "icon": "",
       "image": ""
     },
@@ -185,7 +103,6 @@
       "id": "a1b2c3d4e5",
       "name": "בצל ירוק ",
       "section": "veggies",
-      "quantity": 1,
       "created": "2025-02-14T00:16:04.929Z",
       "icon": "",
       "image": ""
@@ -194,7 +111,6 @@
       "id": "f6g7h8i9j0",
       "name": "בצל לבן 🧅 ",
       "section": "veggies",
-      "quantity": 1,
       "icon": "",
       "image": "",
       "created": ""
@@ -203,25 +119,74 @@
       "id": "u1v2w3x4y5",
       "name": "מלפפון 🥒",
       "section": "veggies",
-      "quantity": 1,
       "created": "2025-01-29T04:20:22.199Z",
       "icon": "",
-      "image": ""
+      "image": "",
+      "quantity": 1
     },
     {
       "id": "z6a7b8c9d0",
       "name": "עגבניה 🍅",
       "section": "veggies",
-      "quantity": 1,
       "created": "2025-01-31T00:21:48.836Z",
       "icon": "",
       "image": ""
     },
     {
+      "id": "87qz3sl92eu",
+      "name": "עגבניות שרי ליקופן",
+      "section": "veggies",
+      "created": "2025-02-21T10:54:19.476Z",
+      "icon": "",
+      "image": ""
+    },
+    {
+      "id": "ybucsvwj04",
+      "name": "תירס",
+      "section": "veggies",
+      "quantity": 0,
+      "created": "2025-02-25T22:35:48.373Z",
+      "icon": "",
+      "image": ""
+    },
+    {
+      "id": "e1f2g3h4i5",
+      "name": "קולה זירו 1ל",
+      "section": "drinks",
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "j6k7l8m9n0",
+      "name": "שישיית מים 0.5ל",
+      "section": "drinks",
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "o1p2q3r4s5",
+      "name": "שישיית מים 1.5ל",
+      "section": "drinks",
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "eh73no8up2t",
+      "name": "בצל שחור",
+      "section": "deli",
+      "created": "2025-02-19T22:57:51.833Z",
+      "icon": "",
+      "image": "",
+      "quantity": 0,
+      "checked": false
+    },
+    {
       "id": "t6u7v8w9x0",
       "name": "פטינה",
       "section": "deli",
-      "quantity": 1,
       "icon": "",
       "image": "",
       "created": ""
@@ -230,25 +195,39 @@
       "id": "y1z2a3b4c5",
       "name": "חלב רגיל 🐄",
       "section": "dairy",
-      "quantity": 1,
       "created": "2025-01-30T13:05:31.434Z",
       "icon": "",
       "image": ""
     },
     {
-      "id": "n6o7p8q9r0",
-      "name": "צהובה פרוסות 15%",
+      "id": "i1j2k3l4m5",
+      "name": "צהובה מגורדת 28%",
       "section": "dairy",
-      "quantity": 1,
       "icon": "",
       "image": "",
       "created": ""
     },
     {
+      "id": "n6o7p8q9r0",
+      "name": "צהובה פרוסות 15%",
+      "section": "dairy",
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
+      "id": "r5rjpw6yj0n",
+      "name": "כרובית קפואה",
+      "section": "nokg3ckhioi",
+      "quantity": 0,
+      "created": "2025-02-25T22:36:26.116Z",
+      "icon": "",
+      "image": ""
+    },
+    {
       "id": "s1t2u3v4w5",
       "name": "שניצל תירס 99 קלוריות",
       "section": "nokg3ckhioi",
-      "quantity": 1,
       "created": "2025-02-14T00:34:13.684Z",
       "icon": "",
       "image": ""
@@ -257,8 +236,15 @@
       "id": "ynnnnnu5f6",
       "name": "שעועית ירוקה",
       "section": "nokg3ckhioi",
-      "quantity": 1,
       "created": "2025-02-17T23:03:22.960Z",
+      "icon": "",
+      "image": ""
+    },
+    {
+      "id": "wvrcfwh69uq",
+      "name": "בשר טחון",
+      "section": "065499elky7",
+      "created": "2025-02-16T23:50:42.704Z",
       "icon": "",
       "image": ""
     },
@@ -266,16 +252,14 @@
       "id": "x6y7z8a9b0",
       "name": "חזה עוף",
       "section": "065499elky7",
-      "quantity": 1,
       "created": "2025-02-14T00:32:40.626Z",
       "icon": "",
       "image": ""
     },
     {
       "id": "2jjdn7tmvzo",
-      "name": "כרובית מטוגנת",
+      "name": "כרובית מטוגנת g",
       "section": "a9qf823vj8r",
-      "quantity": 1,
       "created": "2025-02-17T23:03:41.986Z",
       "icon": "",
       "image": ""
@@ -284,37 +268,71 @@
       "id": "zdqiodi71al",
       "name": "שמפו",
       "section": "a9qf823vj8r",
-      "quantity": 1,
       "created": "2025-02-17T21:52:31.949Z",
       "icon": "",
-      "image": ""
+      "image": "",
+      "checked": false
     },
     {
       "id": "0xhyzagtv0lc",
       "name": "תעשה לי מסאג׳",
       "section": "uemcvgcpshm",
-      "quantity": 1,
       "created": "2025-02-17T21:53:06.199Z",
       "icon": "",
       "image": ""
     },
     {
+      "id": "d6e7f8g9h0",
+      "name": "יוגורט פרו ירוק",
+      "section": "p93aoqu1oxf",
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
       "id": "k1l2m3n4o5",
       "name": "בצל סגול 3",
       "section": "3808en52km9",
-      "quantity": 1,
       "created": "2025-01-29T14:04:05.596Z",
+      "icon": "",
+      "image": "",
+      "quantity": 1,
+      "checked": false
+    },
+    {
+      "id": "o4ehjodsjcj",
+      "name": "asdfj",
+      "section": "nlqwh6kr1jk",
+      "created": "2025-02-19T23:06:12.480Z",
       "icon": "",
       "image": ""
     },
     {
-      "id": "eh73no8up2t",
-      "name": "בצל שחור",
-      "section": "qa0l6pirj9",
-      "quantity": 1,
-      "created": "2025-02-19T22:57:51.833Z",
+      "id": "t215toe7",
+      "name": "טרלהלהלה",
+      "section": "nlqwh6kr1jk",
+      "created": "2025-02-19T23:09:10.331Z",
       "icon": "",
       "image": ""
     }
-  ]
+  ],
+  "mainCart": {
+    "products": {
+      "eh73no8up2t": {
+        "id": "eh73no8up2t",
+        "quantity": 3,
+        "checked": true
+      },
+      "k1l2m3n4o5": {
+        "id": "k1l2m3n4o5",
+        "quantity": 3,
+        "checked": false
+      },
+      "u1v2w3x4y5": {
+        "id": "u1v2w3x4y5",
+        "quantity": 10,
+        "checked": false
+      }
+    }
+  }
 }

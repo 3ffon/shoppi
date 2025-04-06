@@ -18,7 +18,7 @@ import {
     styled,
     Badge,
     badgeClasses,
-    Checkbox
+    // Checkbox
 } from '@mui/material';
 
 import {
@@ -33,7 +33,7 @@ import { ProductInterface } from '@/app/lib/interfaces';
 import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
 import { useDictionary } from '@/app/providers/DictionaryProvider';
-import { useProducts } from '@/app/providers/ProductsProvider';
+import { useDB } from '@/app/providers/DBProvider';
 
 import ItemForm from '@/app/components/Forms/ItemForm'
 
@@ -90,7 +90,11 @@ function Item({ ...props }: ItemProps) {
     } = props;
 
     const { dictionary } = useDictionary();
-    const { sections, updateProduct, deleteProduct } = useProducts();
+    const { 
+        sections, 
+        // updateProduct, 
+        deleteProduct 
+    } = useDB();
     const section = sections[props.item.section];
 
     const [item, setItem] = React.useState(props.item);
@@ -131,7 +135,6 @@ function Item({ ...props }: ItemProps) {
 
         if (Math.abs(currentX - startCoords.x) > 1 && Math.abs(currentY - startCoords.y) > 1) {
             if (longPressTimer) {
-                console.log('cancel', currentX, startCoords.x, currentY, startCoords.y);
                 clearTimeout(longPressTimer);
                 setLongPressTimer(null);
             }
@@ -157,10 +160,10 @@ function Item({ ...props }: ItemProps) {
         animate(x, state ? 100 : 0, { type: "spring", stiffness: 300, damping: 30 });
     };
 
-    const updateItem = async (data: ProductInterface) => {
-        setItem(data);
-        await updateProduct(data);
-    };
+    // const updateItem = async (data: ProductInterface) => {
+    //     setItem(data);
+    //     await updateProduct(data);
+    // };
 
     const handleContextMenu = (event: React.MouseEvent) => {
         event.preventDefault();
@@ -201,11 +204,6 @@ function Item({ ...props }: ItemProps) {
                             if (isSwiped || isDragging) {
                                 return e.stopPropagation();
                             }
-                            const updatedItem = {
-                                ...item,
-                                quantity: item.quantity > 0 ? 0 : 1
-                            };
-                            updateItem(updatedItem);
                         }}
                         onTouchStart={handleTouchStart}
                         onTouchEnd={handleTouchEnd}
@@ -215,12 +213,12 @@ function Item({ ...props }: ItemProps) {
                             {item.name}
                             <small>{section ? section.name : dictionary.no_section}</small>
                         </div>
-                        <Checkbox
+                        {/* <Checkbox
                             sx={{
                                 pointerEvents: "none",
                             }}
                             checked={item.quantity > 0}
-                        />
+                        /> */}
                     </ListItemButton>
                     <Menu
                         open={contextMenu !== null}
@@ -294,7 +292,7 @@ function Item({ ...props }: ItemProps) {
 
 export default function Home() {
     const { dictionary } = useDictionary();
-    const { products, sections } = useProducts();
+    const { products, sections } = useDB();
     const [searctInput, setSearchInput] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [openAddItemModal, setOpenAddItemModal] = React.useState(false);
@@ -302,17 +300,10 @@ export default function Home() {
     const [editItem, setEditItem] = React.useState<ProductInterface | null>(null)
     const [isDragging, setIsDragging] = React.useState(false);
     const [editedItemId, setEditedItemId] = React.useState<string | null>(null);
-    const filteredProducts = products?.filter((product: ProductInterface) =>
+    const filteredProducts = Object.values(products).filter((product: ProductInterface) =>
         product.name.toLowerCase().includes(search.toLowerCase())
     ).sort((a, b) => {
-        // Sort by quantity existence (items with quantity == 0 come first)
-        const aHasQuantity = a.quantity === 0;
-        const bHasQuantity = b.quantity === 0;
-        if (aHasQuantity !== bHasQuantity) {
-            return aHasQuantity ? -1 : 1;
-        }
-
-        else if (a.section !== b.section) {
+        if (a.section !== b.section) {
             return (sections[a.section].order ?? 999) - (sections[b.section].order ?? 999);
         }
 

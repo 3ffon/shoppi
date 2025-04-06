@@ -1,8 +1,8 @@
 import React from "react";
 import MuiThemeProvider from "./MuiThemeProvider";
-import { getDictionary } from "./translation";
+import { getDictionary } from "@/app/lib/translation";
 import { DictionaryProvider } from "@/app/providers/DictionaryProvider";
-import { ProductsProvider } from "@/app/providers/ProductsProvider";
+import { DBProvider } from "@/app/providers/DBProvider";
 import { NotificationProvider } from "@/app/providers/NotificationProvider";
 import style from "./layout.module.css";
 import Menu from "../components/Menu/Menu";
@@ -35,11 +35,11 @@ export default async function RootLayout({
         <body className={style.global}>
           <DictionaryProvider dictionary={dict} locale={lang}>
             <NotificationProvider>
-              <ProductsProvider>
+              <DBProvider>
                 <Menu>
                   {children}
                 </Menu>
-              </ProductsProvider>
+              </DBProvider>
             </NotificationProvider>
           </DictionaryProvider>
         </body>

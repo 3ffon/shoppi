@@ -29,13 +29,11 @@ import {
 } from '@mui/icons-material';
 
 import style from './page.module.css';
-import { ProductInterface } from '../lib/interfaces';
+import { ProductInterface, CartItemInterface } from '../lib/interfaces';
 import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
 import { useDictionary } from '@/app/providers/DictionaryProvider';
-import { useProducts } from '@/app/providers/ProductsProvider';
-
-import ItemForm from '../components/Forms/ItemForm'
+import { useDB } from '@/app/providers/DBProvider';
 
 const CartBadge = styled(Badge)`
   & .${badgeClasses.badge} {
@@ -44,37 +42,8 @@ const CartBadge = styled(Badge)`
   }
 `;
 
-function AddOrEditItem({ ...props }) {
-    const {
-        show,
-        addItem,
-    } = props;
-
-    const { dictionary } = useDictionary();
-
-    return (
-        <AnimatePresence>
-            {show && <motion.div
-                className={style.item_add}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.2 }}
-            >
-                <Button
-                    onClick={addItem}
-                    variant="contained"
-                    color="primary"
-                >
-                    {dictionary.item_add_btn} <AddIcon />
-                </Button>
-            </motion.div>}
-        </AnimatePresence>
-    )
-}
-
 interface ItemProps {
-    item: ProductInterface;
+    item: CartItemInterface;
     isDragging: boolean;
     setIsDragging: (isDragging: boolean) => void;
     setOpenEditModal: (open: boolean) => void;
@@ -90,8 +59,8 @@ function Item({ ...props }: ItemProps) {
     } = props;
 
     const { dictionary } = useDictionary();
-    const { sections, updateProduct, deleteProduct } = useProducts();
-    const section = sections[props.item.section];
+    const { sections, products, updateProduct, deleteProduct } = useDB();
+    const section = sections[products[props.item.id].section];
 
     const [item, setItem] = React.useState(props.item);
 
@@ -131,7 +100,6 @@ function Item({ ...props }: ItemProps) {
 
         if (Math.abs(currentX - startCoords.x) > 1 && Math.abs(currentY - startCoords.y) > 1) {
             if (longPressTimer) {
-                console.log('cancel', currentX, startCoords.x, currentY, startCoords.y);
                 clearTimeout(longPressTimer);
                 setLongPressTimer(null);
             }
@@ -212,14 +180,14 @@ function Item({ ...props }: ItemProps) {
                         onTouchMove={handleTouchMove}
                     >
                         <div style={{ display: 'grid' }}>
-                            {item.name}
+                            {products[item.id].name}
                             <small>{section ? section.name : dictionary.no_section}</small>
                         </div>
                         <Checkbox
                             sx={{
                                 pointerEvents: "none",
                             }}
-                            checked={item.quantity > 0}
+                            checked={item.checked}
                         />
                     </ListItemButton>
                     <Menu
@@ -294,7 +262,7 @@ function Item({ ...props }: ItemProps) {
 
 export default function Home() {
     const { dictionary } = useDictionary();
-    const { products, sections } = useProducts();
+    const { products, mainCart } = useDB();
     const [searctInput, setSearchInput] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [openAddItemModal, setOpenAddItemModal] = React.useState(false);
@@ -302,22 +270,8 @@ export default function Home() {
     const [editItem, setEditItem] = React.useState<ProductInterface | null>(null)
     const [isDragging, setIsDragging] = React.useState(false);
     const [editedItemId, setEditedItemId] = React.useState<string | null>(null);
-    const filteredProducts = products?.filter((product: ProductInterface) =>
-        product.name.toLowerCase().includes(search.toLowerCase())
-    ).sort((a, b) => {
-        // Sort by quantity existence (items with quantity == 0 come first)
-        const aHasQuantity = a.quantity === 0;
-        const bHasQuantity = b.quantity === 0;
-        if (aHasQuantity !== bHasQuantity) {
-            return aHasQuantity ? -1 : 1;
-        }
-
-        else if (a.section !== b.section) {
-            return (sections[a.section].order ?? 999) - (sections[b.section].order ?? 999);
-        }
-
-        // If section and quantity existence are the same, sort by name
-        else return a.name.localeCompare(b.name);
+    const filteredProducts = Object.values(mainCart.products).filter((product: Partial<CartItemInterface>) => {
+        return products[product.id as string]?.name?.toLowerCase().includes(search.toLowerCase());
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -386,8 +340,6 @@ export default function Home() {
                 </IconButton>
             </div>
 
-            <AddOrEditItem show={search.length > 0} addItem={addItem} />
-
             <div className={style.list_wrapper}>
                 <List
                     className={style.list}
@@ -427,19 +379,6 @@ export default function Home() {
                     </AnimatePresence>
                 </List>
             </div>
-
-            <ItemForm
-                additionalOnSubmit={() => {
-                    handleAddEditProduct(editItem ? editItem.id : "");
-                }}
-                defaultValue={editItem ? editItem.name : searctInput.trim()}
-                openModal={editItem ? openEditModal : openAddItemModal}
-                setOpenModal={editItem ? setOpenEditModal : setOpenAddItemModal}
-                item={editItem ? editItem : undefined}
-                onClose={() => {
-                    setEditItem(null);
-                }}
-            />
         </div>
     );
 }

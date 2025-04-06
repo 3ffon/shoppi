@@ -13,7 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 import style from "./forms.module.css";
 import { useDictionary } from "@/app/providers/DictionaryProvider";
-import { useProducts } from "@/app/providers/ProductsProvider";
+import { useDB } from "@/app/providers/DBProvider";
 import { ProductInterface, SectionInterface } from "@/app/lib/interfaces";
 import { generateId } from "@/app/lib/utils";
 import React, { useCallback } from "react";
@@ -44,8 +44,7 @@ export default function ItemForm({ ...props }: ItemFormProps) {
     const { dictionary } = useDictionary();
     const [section, setSection] = React.useState<string>(item ? item.section : '');
     const sectionInputRef = React.useRef<HTMLInputElement>(null);
-    const { sections, updateProduct, createProduct, createSection } = useProducts();
-    console.log('you', item, section);
+    const { sections, updateProduct, createProduct, createSection } = useDB();
 
     const cleanStateAndClose = useCallback(() => {
         setSection('');

@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useNotification } from './NotificationProvider';
 import { useDictionary } from './DictionaryProvider';
-import { ProductInterface, SectionInterface } from '@/app/lib/interfaces';
+import { MainCartInterface, ProductInterface, SectionInterface, CartItemInterface } from '@/app/lib/interfaces';
 import {
     fetchDb,
     createProduct,
@@ -15,8 +15,9 @@ import {
 } from '@/app/lib/apiClient';
 
 interface ProductsContextType {
-    products: ProductInterface[];
+    products: { [key: string]: ProductInterface };
     sections: { [key: string]: SectionInterface };
+    mainCart: MainCartInterface;
     loadingState: boolean;
 
     loadDB: () => void;
@@ -30,15 +31,16 @@ interface ProductsContextType {
     deleteSection: (section: SectionInterface) => void;
 }
 
-const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
+const DBContext = createContext<ProductsContextType | undefined>(undefined);
 
-export function ProductsProvider({ children }: { children: React.ReactNode }) {
+export function DBProvider({ children }: { children: React.ReactNode }) {
     const { showNotification } = useNotification();
     const { dictionary } = useDictionary();
 
-    const [products, setProducts] = useState<ProductInterface[]>([]);
-    const [sections, setSections] = useState<{ [key: string]: SectionInterface }>({});
     const [loading, setLoading] = useState<boolean>(false);
+    const [products, setProducts] = useState<{ [key: string]: ProductInterface }>({});
+    const [sections, setSections] = useState<{ [key: string]: SectionInterface }>({});
+    const [mainCart, setMainCart] = useState<MainCartInterface>({ products: {} });
 
     /**
      * Managing Global State
@@ -47,11 +49,15 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
         setLoading(true);
         try {
             const response = await fetchDb();
-            
+
             // Always update the state with fresh data
-            setProducts(response.items);
+            setProducts(response.items.reduce((acc: { [key: string]: ProductInterface }, product: ProductInterface) => {
+                acc[product.id] = product;
+                return acc;
+            }, {}));
             setSections(response.sections);
-            
+            setMainCart(response.mainCart);
+
         } catch (err) {
             console.error(err);
         } finally {
@@ -83,7 +89,7 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
      */
     const createProductInternal = useCallback(async (product: ProductInterface) => {
         setLoading(true);
-        setProducts(currentProducts => [...currentProducts, product]);
+        setProducts(currentProducts => ({ ...currentProducts, [product.id]: product }));
 
         try {
             await createProduct(product);
@@ -98,11 +104,7 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
 
     const updateProductInternal = useCallback(async (product: ProductInterface) => {
         setLoading(true);
-        setProducts(currentProducts =>
-            currentProducts.map(currentProduct =>
-                currentProduct.id === product.id ? product : currentProduct
-            )
-        );
+        setProducts(currentProducts => ({ ...currentProducts, [product.id]: product }));
 
         try {
             await updateProduct(product);
@@ -118,7 +120,11 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
 
     const deleteProductInternal = useCallback(async (product: ProductInterface) => {
         setLoading(true);
-        setProducts(currentProducts => currentProducts.filter(currentProduct => currentProduct.id !== product.id));
+        setProducts(currentProducts => {
+            const newProducts = { ...currentProducts };
+            delete newProducts[product.id];
+            return newProducts;
+        });
         try {
             await deleteProduct(product);
             showNotification(dictionary.item_delete_success, 'success');
@@ -181,30 +187,51 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
+    /**
+     * Managing Main Cart
+     */
+    const addOrUpdateCartItem = useCallback(async (cartItem: CartItemInterface) => {
+        setLoading(true);
+        setMainCart(currentCart => {
+            return {
+                products: {
+                    ...currentCart.products,
+                    [cartItem.id]: cartItem
+                }
+            }
+        });
+        setLoading(false);
+    }, []);
+
+
     const value = {
         products,
         sections,
+        mainCart,
         loadingState: loading,
+
         updateProduct: updateProductInternal,
         createProduct: createProductInternal,
         deleteProduct: deleteProductInternal,
+
         createSection: createSectionInternal,
         updateSection: updateSectionInternal,
         deleteSection: deleteSectionInternal,
+
         loadDB,
     };
 
     return (
-        <ProductsContext.Provider value={value}>
+        <DBContext.Provider value={value}>
             {children}
-        </ProductsContext.Provider>
+        </DBContext.Provider>
     );
 }
 
-export function useProducts() {
-    const context = useContext(ProductsContext);
+export function useDB() {
+    const context = useContext(DBContext);
     if (context === undefined) {
-        throw new Error('useProducts must be used within a ProductsProvider');
+        throw new Error('useDB must be used within a DBProvider');
     }
     return context;
 }

@@ -17,14 +17,7 @@ export async function GET() {
 
   // order items by section order, then by quantity existence (>0), then by name
   const items = db?.products.sort((a, b) => {
-    // Sort by quantity existence (items with quantity == 0 come first)
-    const aHasQuantity = a.quantity === 0;
-    const bHasQuantity = b.quantity === 0;
-    if (aHasQuantity !== bHasQuantity) {
-      return aHasQuantity ? -1 : 1;
-    }
-
-    else if (a.section !== b.section) {
+    if (a.section !== b.section) {
       return (sectionsMap[a.section].order ?? 999) - (sectionsMap[b.section].order ?? 999);
     }
     
@@ -36,10 +29,12 @@ export async function GET() {
     return NextResponse.json({ error: 'No items found' }, { status: 404 });
   }
 
+  const mainCart = db?.mainCart;
   
   const body : ApiResponseInterface = {
     items,
-    sections: sectionsMap
+    sections: sectionsMap,
+    mainCart
   }
 
   return NextResponse.json(
