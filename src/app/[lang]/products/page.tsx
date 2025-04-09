@@ -15,17 +15,14 @@ import {
     DialogActions,
     DialogTitle,
     IconButton,
-    styled,
-    Badge,
-    badgeClasses,
-    // Checkbox
 } from '@mui/material';
 
 import {
     Add as AddIcon,
     Clear as ClearIcon,
     DeleteOutlined as DeleteIcon,
-    Tune as TuneIcon,
+    AddShoppingCart as AddToCartIcon,
+    RemoveShoppingCart as RemoveFromCartIcon,
 } from '@mui/icons-material';
 
 import style from './page.module.css';
@@ -36,13 +33,6 @@ import { useDictionary } from '@/app/providers/DictionaryProvider';
 import { useDB } from '@/app/providers/DBProvider';
 
 import ItemForm from '@/app/components/Forms/ItemForm'
-
-const CartBadge = styled(Badge)`
-  & .${badgeClasses.badge} {
-    top: -12px;
-    right: -6px;
-  }
-`;
 
 function AddOrEditItem({ ...props }) {
     const {
@@ -93,7 +83,11 @@ function Item({ ...props }: ItemProps) {
     const { 
         sections, 
         // updateProduct, 
-        deleteProduct 
+        deleteProduct,
+        mainCart,
+        addCartItem,
+        updateCartItem,
+        removeCartItem
     } = useDB();
     const section = sections[props.item.section];
 
@@ -212,6 +206,60 @@ function Item({ ...props }: ItemProps) {
                         <div style={{ display: 'grid' }}>
                             {item.name}
                             <small>{section ? section.name : dictionary.no_section}</small>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            {mainCart.products[item.id] ? (
+                                <>
+                                    <IconButton 
+                                        size="small" 
+                                        color="primary"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const cartItem = mainCart.products[item.id];
+                                            if (cartItem.quantity <= 1) {
+                                                removeCartItem(item.id);
+                                            } else {
+                                                updateCartItem({
+                                                    ...cartItem,
+                                                    quantity: cartItem.quantity - 1
+                                                });
+                                            }
+                                        }}
+                                    >
+                                        <RemoveFromCartIcon />
+                                    </IconButton>
+                                    <span style={{ margin: '0 8px' }}>{mainCart.products[item.id].quantity}</span>
+                                    <IconButton 
+                                        size="small" 
+                                        color="primary"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const cartItem = mainCart.products[item.id];
+                                            updateCartItem({
+                                                ...cartItem,
+                                                quantity: cartItem.quantity + 1
+                                            });
+                                        }}
+                                    >
+                                        <AddToCartIcon />
+                                    </IconButton>
+                                </>
+                            ) : (
+                                <IconButton 
+                                    size="small" 
+                                    color="primary"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        addCartItem({
+                                            id: item.id,
+                                            quantity: 1,
+                                            checked: false
+                                        });
+                                    }}
+                                >
+                                    <AddToCartIcon />
+                                </IconButton>
+                            )}
                         </div>
                         {/* <Checkbox
                             sx={{
@@ -371,10 +419,6 @@ export default function Home() {
                         debouncedSetSearch(e.target.value);
                     }}
                 />
-                <IconButton className={style.tune_button}>
-                    <TuneIcon sx={{ fontSize: 30 }} />
-                    <CartBadge badgeContent={2} color="primary" overlap="circular" />
-                </IconButton>
             </div>
 
             <AddOrEditItem show={search.length > 0} addItem={addItem} />

@@ -14,52 +14,36 @@ import {
     Dialog,
     DialogActions,
     DialogTitle,
-    IconButton,
-    styled,
     Badge,
-    badgeClasses,
     Checkbox
 } from '@mui/material';
 
 import {
-    Add as AddIcon,
     Clear as ClearIcon,
     DeleteOutlined as DeleteIcon,
-    Tune as TuneIcon,
 } from '@mui/icons-material';
 
 import style from './page.module.css';
-import { ProductInterface, CartItemInterface } from '../lib/interfaces';
+import { CartItemInterface } from '../lib/interfaces';
 import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
 import { useDictionary } from '@/app/providers/DictionaryProvider';
 import { useDB } from '@/app/providers/DBProvider';
 
-const CartBadge = styled(Badge)`
-  & .${badgeClasses.badge} {
-    top: -12px;
-    right: -6px;
-  }
-`;
-
 interface ItemProps {
     item: CartItemInterface;
     isDragging: boolean;
     setIsDragging: (isDragging: boolean) => void;
-    setOpenEditModal: (open: boolean) => void;
-    setEditItem: (item: ProductInterface) => void;
 }
 
 function Item({ ...props }: ItemProps) {
     const {
         isDragging,
         setIsDragging,
-        setOpenEditModal,
-        setEditItem,
     } = props;
 
     const { dictionary } = useDictionary();
-    const { sections, products, updateProduct, deleteProduct } = useDB();
+    const { sections, products, removeCartItem, updateCartItem } = useDB();
     const section = sections[products[props.item.id].section];
 
     const [item, setItem] = React.useState(props.item);
@@ -88,8 +72,7 @@ function Item({ ...props }: ItemProps) {
     const handleTouchStart = (event: React.TouchEvent) => {
         setStartCoords({ x: event.touches[0].clientX, y: event.touches[0].clientY });
         const timer = setTimeout(() => {
-            setEditItem(item);
-            setOpenEditModal(true);
+            
         }, 500);
         setLongPressTimer(timer);
     };
@@ -125,9 +108,13 @@ function Item({ ...props }: ItemProps) {
         animate(x, state ? 100 : 0, { type: "spring", stiffness: 300, damping: 30 });
     };
 
-    const updateItem = async (data: ProductInterface) => {
-        setItem(data);
-        await updateProduct(data);
+    const toggleChecked = async () => {
+        const updatedItem = {
+            ...item,
+            checked: !item.checked
+        };
+        setItem(updatedItem);
+        await updateCartItem(updatedItem);
     };
 
     const handleContextMenu = (event: React.MouseEvent) => {
@@ -162,25 +149,31 @@ function Item({ ...props }: ItemProps) {
                         sx={{
                             fontWeight: 'bold',
                             justifyContent: "space-between",
-
+                            opacity: item.checked ? 0.6 : 1,
+                            textDecoration: item.checked ? 'line-through' : 'none',
                         }}
                         onContextMenu={handleContextMenu}
                         onClick={(e) => {
                             if (isSwiped || isDragging) {
                                 return e.stopPropagation();
                             }
-                            const updatedItem = {
-                                ...item,
-                                quantity: item.quantity > 0 ? 0 : 1
-                            };
-                            updateItem(updatedItem);
+                            toggleChecked();
                         }}
                         onTouchStart={handleTouchStart}
                         onTouchEnd={handleTouchEnd}
                         onTouchMove={handleTouchMove}
                     >
                         <div style={{ display: 'grid' }}>
-                            {products[item.id].name}
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                {products[item.id].name}
+                                {item.quantity > 0 && (
+                                    <Badge 
+                                        badgeContent={item.quantity} 
+                                        color="success" 
+                                        sx={{ ml: 5 }}
+                                    />
+                                )}
+                            </div>
                             <small>{section ? section.name : dictionary.no_section}</small>
                         </div>
                         <Checkbox
@@ -200,11 +193,6 @@ function Item({ ...props }: ItemProps) {
                                 : undefined
                         }
                     >
-                        <MenuItem onClick={() => {
-                            setEditItem(item);
-                            setOpenEditModal(true);
-                            handleContextMenuClose();
-                        }}>{dictionary.edit_btn}</MenuItem>
                         <MenuItem onClick={async () => {
                             setOpenDeleteDialog(true);
                             handleContextMenuClose();
@@ -241,7 +229,7 @@ function Item({ ...props }: ItemProps) {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                    {dictionary.dialog_delete_txt} {item.name} ?
+                    {dictionary.dialog_delete_txt} {products[item.id].name} {dictionary.from_cart}?
                 </DialogTitle>
                 <DialogActions>
                     <Button onClick={() => {
@@ -249,7 +237,7 @@ function Item({ ...props }: ItemProps) {
                         resetSwipeState();
                     }}>{dictionary.cancel_btn}</Button>
                     <Button onClick={async () => {
-                        await deleteProduct(item);
+                        await removeCartItem(item.id);
                         setOpenDeleteDialog(false);
                     }} autoFocus>
                         {dictionary.confirm_btn}
@@ -265,13 +253,21 @@ export default function Home() {
     const { products, mainCart } = useDB();
     const [searctInput, setSearchInput] = React.useState('');
     const [search, setSearch] = React.useState('');
-    const [openAddItemModal, setOpenAddItemModal] = React.useState(false);
-    const [openEditModal, setOpenEditModal] = React.useState(false);
-    const [editItem, setEditItem] = React.useState<ProductInterface | null>(null)
     const [isDragging, setIsDragging] = React.useState(false);
-    const [editedItemId, setEditedItemId] = React.useState<string | null>(null);
+    
+    // Filter products based on search
     const filteredProducts = Object.values(mainCart.products).filter((product: Partial<CartItemInterface>) => {
         return products[product.id as string]?.name?.toLowerCase().includes(search.toLowerCase());
+    });
+    
+    // Sort products: unchecked items first, then checked items
+    const sortedProducts = [...filteredProducts].sort((a, b) => {
+        if (a.checked === b.checked) {
+            // If checked status is the same, sort alphabetically by name
+            return products[a.id]?.name.localeCompare(products[b.id]?.name) || 0;
+        }
+        // Sort by checked status (unchecked first)
+        return a.checked ? 1 : -1;
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -282,32 +278,6 @@ export default function Home() {
             debouncedSetSearch.cancel();
         }
     }, [debouncedSetSearch]);
-
-    const addItem = () => {
-        setOpenAddItemModal(true);
-    };
-
-    const handleAddEditProduct = (id: string) => {
-        // Store current scroll position
-        const scrollPosition = window.scrollY;
-        setOpenAddItemModal(false);
-        setSearchInput('');
-        setSearch('');
-
-        // If editing an item, set it as recently edited
-        if (id) {
-            setEditedItemId(id);
-
-            setTimeout(() => {
-                setEditedItemId(null);
-            }, 1000); // Clear the edited state after 1 second
-        }
-
-        // Restore scroll position after state updates
-        requestAnimationFrame(() => {
-            window.scrollTo(0, scrollPosition);
-        });
-    };
 
     return (
         <div className={style.component_wrapper}>
@@ -334,10 +304,6 @@ export default function Home() {
                         debouncedSetSearch(e.target.value);
                     }}
                 />
-                <IconButton className={style.tune_button}>
-                    <TuneIcon sx={{ fontSize: 30 }} />
-                    <CartBadge badgeContent={2} color="primary" overlap="circular" />
-                </IconButton>
             </div>
 
             <div className={style.list_wrapper}>
@@ -347,15 +313,12 @@ export default function Home() {
                     dense
                 >
                     <AnimatePresence mode="sync">
-                        {filteredProducts?.map((item) => (
+                        {sortedProducts.map((item) => (
                             <motion.div
                                 key={item.id}
                                 initial={{ opacity: 0 }}
                                 animate={{
-                                    opacity: 1,
-                                    backgroundColor: editedItemId === item.id ?
-                                        ['rgba(144, 202, 249, 0.5)', 'rgba(144, 202, 249, 0)'] :
-                                        'transparent'
+                                    opacity: 1
                                 }}
                                 exit={{ opacity: 0 }}
                                 transition={{
@@ -369,8 +332,6 @@ export default function Home() {
                                 <Item
                                     key={item.id}
                                     item={item}
-                                    setOpenEditModal={setOpenEditModal}
-                                    setEditItem={setEditItem}
                                     isDragging={isDragging}
                                     setIsDragging={setIsDragging}
                                 />

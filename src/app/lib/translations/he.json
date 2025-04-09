@@ -27,6 +27,14 @@
     "item_edit_failed": "שגיאה בעריכת מוצר",
     "item_delete_success": "המוצר נמחק בהצלחה",
     "item_delete_failed": "שגיאה במחיקת מוצר",
+
+    "item_update_in_cart_success": "המוצר עודכן בעגלה בהצלחה",
+    "item_update_in_cart_failed": "שגיאה בעריכת מוצר בעגלה",
+    "item_add_to_cart_success": "המוצר נוסף בעגלה בהצלחה",
+    "item_add_to_cart_failed": "שגיאה בהוספת מוצר בעגלה",
+    "item_remove_from_cart_success": "המוצר נמחק מהעגלה בהצלחה",
+    "item_remove_from_cart_failed": "שגיאה במחיקת מוצר מהעגלה",
+    "from_cart": "מהעגלה",
     
     "dark_mode": "מצב חושך",
     "light_mode": "מצב בהיר",

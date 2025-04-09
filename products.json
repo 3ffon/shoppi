@@ -92,14 +92,6 @@
   ],
   "products": [
     {
-      "id": "p6q7r8s9t0",
-      "name": "בצל ירוק",
-      "section": "veggies",
-      "created": "2025-02-14T00:15:34.643Z",
-      "icon": "",
-      "image": ""
-    },
-    {
       "id": "a1b2c3d4e5",
       "name": "בצל ירוק ",
       "section": "veggies",
@@ -116,13 +108,24 @@
       "created": ""
     },
     {
+      "id": "k1l2m3n4o5",
+      "name": "בצל סגול",
+      "section": "veggies",
+      "created": "2025-01-29T14:04:05.596Z",
+      "icon": "",
+      "image": "",
+      "quantity": 0,
+      "checked": false
+    },
+    {
       "id": "u1v2w3x4y5",
       "name": "מלפפון 🥒",
       "section": "veggies",
       "created": "2025-01-29T04:20:22.199Z",
       "icon": "",
       "image": "",
-      "quantity": 1
+      "quantity": 0,
+      "checked": false
     },
     {
       "id": "z6a7b8c9d0",
@@ -137,6 +140,15 @@
       "name": "עגבניות שרי ליקופן",
       "section": "veggies",
       "created": "2025-02-21T10:54:19.476Z",
+      "icon": "",
+      "image": ""
+    },
+    {
+      "id": "bos0c0zmzie",
+      "name": "עירית ירוקה",
+      "section": "veggies",
+      "quantity": 0,
+      "created": "2025-04-08T21:51:00.789Z",
       "icon": "",
       "image": ""
     },
@@ -172,16 +184,6 @@
       "icon": "",
       "image": "",
       "created": ""
-    },
-    {
-      "id": "eh73no8up2t",
-      "name": "בצל שחור",
-      "section": "deli",
-      "created": "2025-02-19T22:57:51.833Z",
-      "icon": "",
-      "image": "",
-      "quantity": 0,
-      "checked": false
     },
     {
       "id": "t6u7v8w9x0",
@@ -290,16 +292,6 @@
       "created": ""
     },
     {
-      "id": "k1l2m3n4o5",
-      "name": "בצל סגול 3",
-      "section": "3808en52km9",
-      "created": "2025-01-29T14:04:05.596Z",
-      "icon": "",
-      "image": "",
-      "quantity": 1,
-      "checked": false
-    },
-    {
       "id": "o4ehjodsjcj",
       "name": "asdfj",
       "section": "nlqwh6kr1jk",
@@ -318,19 +310,89 @@
   ],
   "mainCart": {
     "products": {
-      "eh73no8up2t": {
-        "id": "eh73no8up2t",
-        "quantity": 3,
-        "checked": true
-      },
       "k1l2m3n4o5": {
         "id": "k1l2m3n4o5",
-        "quantity": 3,
-        "checked": false
+        "quantity": 5,
+        "checked": true
       },
       "u1v2w3x4y5": {
         "id": "u1v2w3x4y5",
-        "quantity": 10,
+        "quantity": 1,
+        "checked": true
+      },
+      "z6a7b8c9d0": {
+        "id": "z6a7b8c9d0",
+        "quantity": 2,
+        "checked": true
+      },
+      "a1b2c3d4e5": {
+        "id": "a1b2c3d4e5",
+        "quantity": 1,
+        "checked": true
+      },
+      "bos0c0zmzie": {
+        "id": "bos0c0zmzie",
+        "quantity": 1,
+        "checked": false
+      },
+      "ybucsvwj04": {
+        "id": "ybucsvwj04",
+        "quantity": 1,
+        "checked": false
+      },
+      "t6u7v8w9x0": {
+        "id": "t6u7v8w9x0",
+        "quantity": 2,
+        "checked": false
+      },
+      "zdqiodi71al": {
+        "id": "zdqiodi71al",
+        "quantity": 1,
+        "checked": false
+      },
+      "87qz3sl92eu": {
+        "id": "87qz3sl92eu",
+        "quantity": 1,
+        "checked": false
+      },
+      "e1f2g3h4i5": {
+        "id": "e1f2g3h4i5",
+        "quantity": 1,
+        "checked": false
+      },
+      "j6k7l8m9n0": {
+        "id": "j6k7l8m9n0",
+        "quantity": 2,
+        "checked": false
+      },
+      "y1z2a3b4c5": {
+        "id": "y1z2a3b4c5",
+        "quantity": 1,
+        "checked": false
+      },
+      "i1j2k3l4m5": {
+        "id": "i1j2k3l4m5",
+        "quantity": 1,
+        "checked": true
+      },
+      "n6o7p8q9r0": {
+        "id": "n6o7p8q9r0",
+        "quantity": 1,
+        "checked": false
+      },
+      "r5rjpw6yj0n": {
+        "id": "r5rjpw6yj0n",
+        "quantity": 1,
+        "checked": true
+      },
+      "s1t2u3v4w5": {
+        "id": "s1t2u3v4w5",
+        "quantity": 1,
+        "checked": false
+      },
+      "ynnnnnu5f6": {
+        "id": "ynnnnnu5f6",
+        "quantity": 1,
         "checked": false
       }
     }

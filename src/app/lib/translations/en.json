@@ -28,6 +28,14 @@
     "item_delete_success": "Product deleted successfully",
     "item_delete_failed": "Failed to delete product",
 
+    "item_update_in_cart_success": "Product updated in cart successfully",
+    "item_update_in_cart_failed": "Failed to update product in cart",
+    "item_add_to_cart_success": "Product added to cart successfully",
+    "item_add_to_cart_failed": "Failed to add product to cart",
+    "item_remove_from_cart_success": "Product removed from cart successfully",
+    "item_remove_from_cart_failed": "Failed to remove product from cart",
+    "from_cart": "from cart",
+    
     "dark_mode": "Dark Mode",
     "light_mode": "Light Mode",
 

@@ -86,3 +86,24 @@ export const clearCart = async (cartId: string): Promise<CartItemInterface[]> =>
   const response = await axiosClient.delete(`/api/carts/${cartId}/items`);
   return response.data;
 };
+
+// Main Cart API functions
+export const getMainCart = async () => {
+  const response = await axiosClient.get('/api/mainCart');
+  return response.data.mainCart;
+};
+
+export const addItemToMainCart = async (item: CartItemInterface): Promise<CartItemInterface> => {
+  const response = await axiosClient.post('/api/mainCart', item);
+  return response.data;
+};
+
+export const updateMainCartItem = async (item: CartItemInterface): Promise<CartItemInterface> => {
+  const response = await axiosClient.put('/api/mainCart', item);
+  return response.data;
+};
+
+export const removeItemFromMainCart = async (itemId: string): Promise<CartItemInterface> => {
+  const response = await axiosClient.delete(`/api/mainCart?id=${encodeURIComponent(itemId)}`);
+  return response.data;
+};

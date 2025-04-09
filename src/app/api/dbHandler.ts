@@ -3,7 +3,6 @@ import {
   DBReseponseInterface,
   ProductInterface,
   SectionInterface,
-  CartInterface,
   CartItemInterface,
   MainCartInterface,
 } from "../lib/interfaces";
@@ -35,9 +34,8 @@ class DBHandler {
     return this.db;
   }
 
-  /**
-   * managing products
-   */
+  // #region Manage Products
+
   createProduct(product: ProductInterface) {
     this.db?.products.push(product);
     this.updateDB();
@@ -64,9 +62,10 @@ class DBHandler {
     }
   }
 
-  /**
-   * managing sections
-   */
+  // #endregion Managing Products
+
+  // #region Manage Sections
+
   getSections() {
     return this.db?.sections;
   }
@@ -105,96 +104,28 @@ class DBHandler {
     }
   }
 
-  /**
-   * Managing Main Cart
-   */
+  // #endregion
+
+  // #region Manage Main Cart
+
   getMainCart(): MainCartInterface {
+    this.updateDB();
     return this.db.mainCart;
   }
 
   addItemToCart(item: CartItemInterface) {
     this.db.mainCart.products[item.id] = item;
+    this.updateDB();
     return this.db.mainCart.products[item.id];
   }
 
   removeItemFromCart(item: CartItemInterface) {
     delete this.db.mainCart.products[item.id];
+    this.updateDB();
     return item;
   }
 
-  /**
-   * Managing carts
-   */
-  addNewCart(cart: CartInterface) {
-    this.db?.carts.push(cart);
-    this.updateDB();
-  }
-
-  getCart(cartId: string) {
-    return this.db?.carts.find((cart) => cart.id === cartId);
-  }
-
-  updateCart(
-    cartId: string,
-    updates: Partial<CartInterface>
-  ): CartInterface | { status: string } {
-    const cart = this.getCart(cartId);
-    if (!cart) return { status: "cart not found" };
-
-    Object.assign(cart, updates);
-    this.updateDB();
-    return cart;
-  }
-
-  addCartItem(cartId: string, item: CartItemInterface) {
-    const cart = this.getCart(cartId);
-    if (!cart) return { status: "cart not found" };
-
-    // Check if item already exists
-    const existingItem = cart.products.find((p) => p.id === item.id);
-    if (existingItem) {
-      existingItem.quantity += item.quantity;
-    } else {
-      cart.products.push(item);
-    }
-
-    this.updateDB();
-    return cart;
-  }
-
-  updateCartItem(
-    cartId: string,
-    itemId: string,
-    updates: Partial<CartItemInterface>
-  ) {
-    const cart = this.getCart(cartId);
-    if (!cart) return { status: "cart not found" };
-
-    const item = cart.products.find((p) => p.id === itemId);
-    if (!item) return { status: "item not found" };
-
-    Object.assign(item, updates);
-    this.updateDB();
-    return cart;
-  }
-
-  removeCartItem(cartId: string, itemId: string) {
-    const cart = this.getCart(cartId);
-    if (!cart) return { status: "cart not found" };
-
-    cart.products = cart.products.filter((p) => p.id !== itemId);
-    this.updateDB();
-    return cart;
-  }
-
-  clearCart(cartId: string) {
-    const cart = this.getCart(cartId);
-    if (!cart) return { status: "cart not found" };
-
-    cart.products = [];
-    this.updateDB();
-    return cart;
-  }
+  // #endregion
 }
 
 const DBController = new DBHandler("./products.json");

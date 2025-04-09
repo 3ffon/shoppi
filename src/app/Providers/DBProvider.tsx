@@ -12,6 +12,9 @@ import {
     createSection,
     updateSection,
     deleteSection,
+    addItemToMainCart,
+    updateMainCartItem,
+    removeItemFromMainCart,
 } from '@/app/lib/apiClient';
 
 interface ProductsContextType {
@@ -29,6 +32,10 @@ interface ProductsContextType {
     createSection: (section: SectionInterface) => void;
     updateSection: (section: SectionInterface) => void;
     deleteSection: (section: SectionInterface) => void;
+    
+    addCartItem: (item: CartItemInterface) => void;
+    updateCartItem: (item: CartItemInterface) => void;
+    removeCartItem: (itemId: string) => void;
 }
 
 const DBContext = createContext<ProductsContextType | undefined>(undefined);
@@ -200,8 +207,60 @@ export function DBProvider({ children }: { children: React.ReactNode }) {
                 }
             }
         });
-        setLoading(false);
-    }, []);
+        
+        try {
+            await addItemToMainCart(cartItem);
+            showNotification(dictionary.item_add_to_cart_success || 'Item added to cart successfully', 'success');
+        } catch (err) {
+            console.error(err);
+            showNotification(dictionary.item_add_to_cart_failed || 'Failed to add item to cart', 'error');
+        } finally {
+            setLoading(false);
+        }
+    }, [dictionary, showNotification]);
+    
+    const updateCartItemInternal = useCallback(async (cartItem: CartItemInterface) => {
+        setLoading(true);
+        setMainCart(currentCart => {
+            return {
+                products: {
+                    ...currentCart.products,
+                    [cartItem.id]: cartItem
+                }
+            }
+        });
+        
+        try {
+            await updateMainCartItem(cartItem);
+            showNotification(dictionary.item_update_in_cart_success, 'success');
+        } catch (err) {
+            console.error(err);
+            showNotification(dictionary.item_update_in_cart_failed, 'error');
+        } finally {
+            setLoading(false);
+        }
+    }, [dictionary, showNotification]);
+    
+    const removeCartItemInternal = useCallback(async (itemId: string) => {
+        setLoading(true);
+        setMainCart(currentCart => {
+            const newProducts = { ...currentCart.products };
+            delete newProducts[itemId];
+            return {
+                products: newProducts
+            };
+        });
+        
+        try {
+            await removeItemFromMainCart(itemId);
+            showNotification(dictionary.item_remove_from_cart_success, 'success');
+        } catch (err) {
+            console.error(err);
+            showNotification(dictionary.item_remove_from_cart_failed, 'error');
+        } finally {
+            setLoading(false);
+        }
+    }, [dictionary, showNotification]);
 
 
     const value = {
@@ -217,6 +276,10 @@ export function DBProvider({ children }: { children: React.ReactNode }) {
         createSection: createSectionInternal,
         updateSection: updateSectionInternal,
         deleteSection: deleteSectionInternal,
+        
+        addCartItem: addOrUpdateCartItem,
+        updateCartItem: updateCartItemInternal,
+        removeCartItem: removeCartItemInternal,
 
         loadDB,
     };
