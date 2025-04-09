@@ -3,7 +3,7 @@
 import React, { useEffect, useCallback } from 'react'
 import {
     Box,
-    Button,
+    IconButton,
     InputAdornment,
     List,
     ListItem,
@@ -14,7 +14,8 @@ import {
     Dialog,
     DialogActions,
     DialogTitle,
-    IconButton,
+    Button,
+    Fab,
 } from '@mui/material';
 
 import {
@@ -22,7 +23,8 @@ import {
     Clear as ClearIcon,
     DeleteOutlined as DeleteIcon,
     AddShoppingCart as AddToCartIcon,
-    RemoveShoppingCart as RemoveFromCartIcon,
+    Add as PlusIcon,
+    Remove as MinusIcon,
 } from '@mui/icons-material';
 
 import style from './page.module.css';
@@ -51,13 +53,14 @@ function AddOrEditItem({ ...props }) {
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.2 }}
             >
-                <Button
+                <IconButton
                     onClick={addItem}
-                    variant="contained"
                     color="primary"
+                    size="medium"
+                    aria-label={dictionary.item_add_btn}
                 >
-                    {dictionary.item_add_btn} <AddIcon />
-                </Button>
+                    <AddIcon />
+                </IconButton>
             </motion.div>}
         </AnimatePresence>
     )
@@ -80,8 +83,8 @@ function Item({ ...props }: ItemProps) {
     } = props;
 
     const { dictionary } = useDictionary();
-    const { 
-        sections, 
+    const {
+        sections,
         // updateProduct, 
         deleteProduct,
         mainCart,
@@ -209,10 +212,11 @@ function Item({ ...props }: ItemProps) {
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             {mainCart.products[item.id] ? (
-                                <>
-                                    <IconButton 
-                                        size="small" 
-                                        color="primary"
+                                <div className={style.cart_button_container}>
+                                    <Fab
+                                        
+                                        color="info"
+                                        className={`${style.rounded_button} ${style.remove_button}`}
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             const cartItem = mainCart.products[item.id];
@@ -226,14 +230,16 @@ function Item({ ...props }: ItemProps) {
                                             }
                                         }}
                                     >
-                                        <RemoveFromCartIcon />
-                                    </IconButton>
-                                    <span style={{ margin: '0 8px' }}>{mainCart.products[item.id].quantity}</span>
-                                    <IconButton 
-                                        size="small" 
-                                        color="primary"
+                                        <MinusIcon fontSize="small" />
+                                    </Fab>
+                                    <span className={style.quantity_display}>{mainCart.products[item.id].quantity}</span>
+                                    <Fab
+                                        
+                                        color="info"
+                                        className={`${style.rounded_button} ${style.add_button}`}
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            e.preventDefault();
                                             const cartItem = mainCart.products[item.id];
                                             updateCartItem({
                                                 ...cartItem,
@@ -241,12 +247,12 @@ function Item({ ...props }: ItemProps) {
                                             });
                                         }}
                                     >
-                                        <AddToCartIcon />
-                                    </IconButton>
-                                </>
+                                        <PlusIcon fontSize="small" />
+                                    </Fab>
+                                </div>
                             ) : (
-                                <IconButton 
-                                    size="small" 
+                                <IconButton
+                                    size="small"
                                     color="primary"
                                     onClick={(e) => {
                                         e.stopPropagation();

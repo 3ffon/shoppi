@@ -21,6 +21,8 @@ import {
 import {
     Clear as ClearIcon,
     DeleteOutlined as DeleteIcon,
+    DeleteSweep as DeleteSweepIcon,
+    CheckCircleOutline as CheckCircleOutlineIcon
 } from '@mui/icons-material';
 
 import style from './page.module.css';
@@ -166,22 +168,23 @@ function Item({ ...props }: ItemProps) {
                         <div style={{ display: 'grid' }}>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 {products[item.id].name}
-                                {item.quantity > 0 && (
-                                    <Badge 
-                                        badgeContent={item.quantity} 
-                                        color="success" 
-                                        sx={{ ml: 5 }}
-                                    />
-                                )}
+                                
                             </div>
                             <small>{section ? section.name : dictionary.no_section}</small>
                         </div>
-                        <Checkbox
-                            sx={{
-                                pointerEvents: "none",
-                            }}
-                            checked={item.checked}
-                        />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 100}}>
+                            <Badge 
+                                badgeContent={item.quantity} 
+                                color="success" 
+                                sx={{ ml: 5 }}
+                            />
+                            <Checkbox
+                                sx={{
+                                    pointerEvents: "none",
+                                }}
+                                checked={item.checked}
+                            />
+                        </div>
                     </ListItemButton>
                     <Menu
                         open={contextMenu !== null}
@@ -250,10 +253,12 @@ function Item({ ...props }: ItemProps) {
 
 export default function Home() {
     const { dictionary } = useDictionary();
-    const { products, mainCart } = useDB();
+    const { products, mainCart, removeCartItem } = useDB();
     const [searctInput, setSearchInput] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [isDragging, setIsDragging] = React.useState(false);
+    const [openClearCartDialog, setOpenClearCartDialog] = React.useState(false);
+    const [openClearCheckedDialog, setOpenClearCheckedDialog] = React.useState(false);
     
     // Filter products based on search
     const filteredProducts = Object.values(mainCart.products).filter((product: Partial<CartItemInterface>) => {
@@ -270,6 +275,9 @@ export default function Home() {
         return a.checked ? 1 : -1;
     });
 
+    // Get checked items
+    const checkedItems = sortedProducts.filter(item => item.checked);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedSetSearch = useCallback(debounce(setSearch, 150), []);
 
@@ -279,6 +287,22 @@ export default function Home() {
         }
     }, [debouncedSetSearch]);
 
+    // Function to clear all items from cart
+    const clearCart = async () => {
+        for (const item of Object.values(mainCart.products)) {
+            await removeCartItem(item.id);
+        }
+        setOpenClearCartDialog(false);
+    };
+
+    // Function to clear checked items from cart
+    const clearCheckedItems = async () => {
+        for (const item of checkedItems) {
+            await removeCartItem(item.id);
+        }
+        setOpenClearCheckedDialog(false);
+    };
+    
     return (
         <div className={style.component_wrapper}>
             <div className={style.search_wrapper}>
@@ -340,6 +364,68 @@ export default function Home() {
                     </AnimatePresence>
                 </List>
             </div>
+            
+            {/* Bottom Bar */}
+            <div className={style.bottom_bar}>
+                <Button 
+                    variant="contained" 
+                    color="primary"
+                    className={style.bottom_bar_button}
+                    onClick={() => setOpenClearCheckedDialog(true)}
+                    disabled={checkedItems.length === 0}
+                    startIcon={<CheckCircleOutlineIcon />}
+                >
+                    {dictionary.clear_checked}
+                </Button>
+                <Button 
+                    variant="contained" 
+                    color="error"
+                    className={style.bottom_bar_button}
+                    onClick={() => setOpenClearCartDialog(true)}
+                    disabled={sortedProducts.length === 0}
+                    startIcon={<DeleteSweepIcon />}
+                >
+                    {dictionary.clear_cart}
+                </Button>
+            </div>
+
+            {/* Clear Cart Confirmation Dialog */}
+            <Dialog
+                open={openClearCartDialog}
+                onClose={() => setOpenClearCartDialog(false)}
+                aria-labelledby="clear-cart-dialog-title"
+            >
+                <DialogTitle id="clear-cart-dialog-title">
+                    {dictionary.confirm_clear_cart}
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={() => setOpenClearCartDialog(false)}>
+                        {dictionary.cancel_btn}
+                    </Button>
+                    <Button onClick={clearCart} color="error" autoFocus>
+                        {dictionary.confirm_btn}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Clear Checked Items Confirmation Dialog */}
+            <Dialog
+                open={openClearCheckedDialog}
+                onClose={() => setOpenClearCheckedDialog(false)}
+                aria-labelledby="clear-checked-dialog-title"
+            >
+                <DialogTitle id="clear-checked-dialog-title">
+                    {dictionary.confirm_clear_checked}
+                </DialogTitle>
+                <DialogActions>
+                    <Button onClick={() => setOpenClearCheckedDialog(false)}>
+                        {dictionary.cancel_btn}
+                    </Button>
+                    <Button onClick={clearCheckedItems} color="error" autoFocus>
+                        {dictionary.confirm_btn}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }

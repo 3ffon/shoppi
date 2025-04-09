@@ -35,7 +35,11 @@
     "item_remove_from_cart_success": "Product removed from cart successfully",
     "item_remove_from_cart_failed": "Failed to remove product from cart",
     "from_cart": "from cart",
-    
+    "clear_cart": "Clear Cart",
+    "clear_checked": "Clear Checked",
+    "confirm_clear_cart": "Are you sure you want to clear the entire cart?",
+    "confirm_clear_checked": "Are you sure you want to remove all checked items?",
+
     "dark_mode": "Dark Mode",
     "light_mode": "Light Mode",
 

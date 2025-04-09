@@ -87,7 +87,6 @@ export default function ItemForm({ ...props }: ItemFormProps) {
                 id: generateId(),
                 name: String(productName).trim(),
                 section: newSectionId ? newSectionId : section,
-                quantity: 0,
                 created: new Date().toISOString(),
                 icon: '',
                 image: '',

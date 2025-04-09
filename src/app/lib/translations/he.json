@@ -35,6 +35,10 @@
     "item_remove_from_cart_success": "המוצר נמחק מהעגלה בהצלחה",
     "item_remove_from_cart_failed": "שגיאה במחיקת מוצר מהעגלה",
     "from_cart": "מהעגלה",
+    "clear_cart": "נקה עגלה",
+    "clear_checked": "נקה מסומנים",
+    "confirm_clear_cart": "האם אתה בטוח שברצונך לנקות את כל העגלה?",
+    "confirm_clear_checked": "האם אתה בטוח שברצונך להסיר את כל הפריטים המסומנים?",
     
     "dark_mode": "מצב חושך",
     "light_mode": "מצב בהיר",
