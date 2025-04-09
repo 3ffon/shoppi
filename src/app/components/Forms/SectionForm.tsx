@@ -11,46 +11,74 @@ import style from "./forms.module.css";
 import { useDictionary } from "@/app/providers/DictionaryProvider";
 import { SectionInterface } from "@/app/lib/interfaces";
 import { generateId } from "@/app/lib/utils";
-import React from "react";
+import React, { useEffect } from "react";
+import { createSection, updateSection } from "@/app/lib/apiClient";
 
 interface SectionFormProps {
     section: SectionInterface | undefined;
-    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    onSubmit: () => void;
     addSectionOpen: boolean;
     setAddSectionOpen: (open: boolean) => void;
 }
 
 export default function SectionForm({ ...props }: SectionFormProps) {
     const {
-        // section,
+        section,
         onSubmit,
+        addSectionOpen,
+        setAddSectionOpen
     } = props;
 
     const theme = useTheme();
     const { dictionary } = useDictionary();
-    // const isEdit = section !== undefined;
+    const isEdit = section !== undefined;
 
-
-    const [openSectionForm, toggleSectionFormOpen] = React.useState(false);
-    const [newSection, setNewSection] = React.useState<SectionInterface>({
+    const [sectionData, setSectionData] = React.useState<SectionInterface>({
         id: generateId(),
         name: "",
     });
 
-    // const handleSectionFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault();
-    //     toggleSectionFormOpen(false);
-    // }
+    useEffect(() => {
+        // If we're editing, populate the form with section data
+        if (section) {
+            setSectionData({
+                ...section
+            });
+        } else {
+            // Reset form for new section
+            setSectionData({
+                id: generateId(),
+                name: "",
+            });
+        }
+    }, [section]);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        
+        try {
+            if (isEdit) {
+                await updateSection(sectionData);
+            } else {
+                await createSection(sectionData);
+            }
+            onSubmit();
+            setAddSectionOpen(false);
+        } catch (error) {
+            console.error("Error saving section:", error);
+        }
+    };
 
     return (
-        <Modal open={openSectionForm} onClose={() => toggleSectionFormOpen(false)}>
+        <Modal open={addSectionOpen} onClose={() => setAddSectionOpen(false)}>
             <Box
                 className={`${style.item_add_form} ${theme.palette.mode}`}
                 component="form"
-                onSubmit={onSubmit}
-
+                onSubmit={handleSubmit}
             >
-                <Typography variant="h5" component="h2" gutterBottom>{dictionary.section_new_title}</Typography>
+                <Typography variant="h5" component="h2" gutterBottom>
+                    {isEdit ? dictionary.section_edit_title || "Edit Section" : dictionary.section_new_title}
+                </Typography>
                 <FormControl
                     fullWidth
                     sx={{ mb: 2 }}
@@ -61,10 +89,10 @@ export default function SectionForm({ ...props }: SectionFormProps) {
                         required
                         autoFocus
                         id="name"
-                        value={newSection.name}
+                        value={sectionData.name}
                         onChange={(event) =>
-                            setNewSection({
-                                ...newSection,
+                            setSectionData({
+                                ...sectionData,
                                 name: event.target.value,
                             })
                         }
@@ -77,7 +105,7 @@ export default function SectionForm({ ...props }: SectionFormProps) {
                     <Button
                         variant="contained"
                         color="error"
-                        onClick={() => toggleSectionFormOpen(false)}
+                        onClick={() => setAddSectionOpen(false)}
                         sx={{ flex: 1 }}
                     >{dictionary.cancel_btn}</Button>
                     <Button
@@ -86,10 +114,10 @@ export default function SectionForm({ ...props }: SectionFormProps) {
                         variant="contained"
                         color="primary"
                         sx={{ flex: 3 }}
-                    >{dictionary.create_btn}
+                    >{isEdit ? dictionary.save_btn || "Save" : dictionary.create_btn}
                     </Button>
                 </Box>
             </Box>
         </Modal>
-    )
+    );
 }

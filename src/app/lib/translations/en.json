@@ -16,6 +16,9 @@
     "section_edit_failed": "Failed to update section",
     "section_delete_success": "Section deleted successfully",
     "section_delete_failed": "Failed to delete section",
+    "delete_section_title": "Delete Section",
+    "delete_section_confirmation": "Are you sure you want to delete this section? This will also remove all products in this section.",
+    "save_order": "Save Order",
 
     "item_management": "Item Management",
     "item_add_btn": "Add Product",
@@ -52,5 +55,4 @@
     "save_btn": "Save",
     "create_btn": "Create",
     "no_section": "No Section"
-    
 }

@@ -97,9 +97,16 @@ class DBHandler {
 
   deleteSection(sectionId: string) {
     if (this.db) {
+      // Remove the section
       this.db.sections = this.db.sections.filter(
         (sect) => sect.id !== sectionId
       );
+      
+      // Remove all products that belong to this section
+      this.db.products = this.db.products.filter(
+        (product) => product.section !== sectionId
+      );
+      
       this.updateDB();
     }
   }

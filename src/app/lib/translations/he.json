@@ -16,6 +16,9 @@
     "section_edit_failed": "שגיאה בעריכת מחלקה",
     "section_delete_success": "המחלקה נמחקה בהצלחה",
     "section_delete_failed": "שגיאה במחיקת מחלקה",
+    "delete_section_title": "מחיקת מחלקה",
+    "delete_section_confirmation": "האם אתה בטוח שברצונך למחוק מחלקה זו? פעולה זו תמחק גם את כל המוצרים במחלקה זו.",
+    "save_order": "שמור סדר",
     
     "item_management": "ניהול מוצרים",
     "item_add_btn": "הוסף מוצר",

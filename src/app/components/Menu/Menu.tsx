@@ -130,7 +130,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
               </ListItemButton>
             </ListItem>
 
-            {/* <ListItem onClick={() => {
+            <ListItem onClick={() => {
               router.push('/sections');
               setOpen(false);
             }}>
@@ -140,7 +140,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
                 </ListItemIcon>
                 <ListItemText primary={dictionary.section_management} />
               </ListItemButton>
-            </ListItem> */}
+            </ListItem>
 
             <Divider />
             <ListItem onClick={() => switchLocale(locale === "he" ? "en" : "he")}>
