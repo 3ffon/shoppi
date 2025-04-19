@@ -31,7 +31,7 @@ import style from './page.module.css';
 import { ProductInterface } from '@/app/lib/interfaces';
 import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
-import { useDictionary } from '@/app/providers/DictionaryProvider';
+import { useLanguage } from '@/app/providers/LanguageProvider';
 import { useDB } from '@/app/providers/DBProvider';
 
 import ItemForm from '@/app/components/Forms/ItemForm'
@@ -42,7 +42,7 @@ function AddOrEditItem({ ...props }) {
         addItem,
     } = props;
 
-    const { dictionary } = useDictionary();
+    const { dictionary } = useLanguage();
 
     return (
         <AnimatePresence>
@@ -53,14 +53,15 @@ function AddOrEditItem({ ...props }) {
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.2 }}
             >
-                <IconButton
+                <Button
                     onClick={addItem}
                     color="primary"
                     size="medium"
+                    variant="contained"
                     aria-label={dictionary.item_add_btn}
                 >
-                    <AddIcon />
-                </IconButton>
+                    {dictionary.item_add_btn} <AddIcon />
+                </Button>
             </motion.div>}
         </AnimatePresence>
     )
@@ -82,7 +83,7 @@ function Item({ ...props }: ItemProps) {
         setEditItem,
     } = props;
 
-    const { dictionary } = useDictionary();
+    const { dictionary } = useLanguage();
     const {
         sections,
         // updateProduct, 
@@ -345,7 +346,7 @@ function Item({ ...props }: ItemProps) {
 }
 
 export default function Home() {
-    const { dictionary } = useDictionary();
+    const { dictionary } = useLanguage();
     const { products, sections } = useDB();
     const [searctInput, setSearchInput] = React.useState('');
     const [search, setSearch] = React.useState('');

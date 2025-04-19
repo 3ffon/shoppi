@@ -18,6 +18,8 @@ import {
     Checkbox
 } from '@mui/material';
 
+import { useTheme } from '@mui/material/styles';
+
 import {
     Clear as ClearIcon,
     DeleteOutlined as DeleteIcon,
@@ -26,10 +28,10 @@ import {
 } from '@mui/icons-material';
 
 import style from './page.module.css';
-import { CartItemInterface } from '../lib/interfaces';
+import { CartItemInterface } from './lib/interfaces';
 import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
-import { useDictionary } from '@/app/providers/DictionaryProvider';
+import { useLanguage } from '@/app/providers/LanguageProvider';
 import { useDB } from '@/app/providers/DBProvider';
 
 interface ItemProps {
@@ -44,7 +46,8 @@ function Item({ ...props }: ItemProps) {
         setIsDragging,
     } = props;
 
-    const { dictionary } = useDictionary();
+    
+    const { dictionary } = useLanguage();
     const { sections, products, removeCartItem, updateCartItem } = useDB();
     const section = sections[products[props.item.id].section];
 
@@ -252,7 +255,8 @@ function Item({ ...props }: ItemProps) {
 }
 
 export default function Home() {
-    const { dictionary } = useDictionary();
+    const theme = useTheme();
+    const { dictionary } = useLanguage();
     const { products, mainCart, removeCartItem } = useDB();
     const [searctInput, setSearchInput] = React.useState('');
     const [search, setSearch] = React.useState('');
@@ -366,10 +370,10 @@ export default function Home() {
             </div>
             
             {/* Bottom Bar */}
-            <div className={style.bottom_bar}>
+            <div className={style.bottom_bar + ' ' + theme.palette.mode}>
                 <Button 
                     variant="contained" 
-                    color="primary"
+                    color="secondary"
                     className={style.bottom_bar_button}
                     onClick={() => setOpenClearCheckedDialog(true)}
                     disabled={checkedItems.length === 0}

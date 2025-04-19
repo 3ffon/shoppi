@@ -20,7 +20,7 @@ import {
     Delete as DeleteIcon,
     Add as AddIcon,
 } from '@mui/icons-material';
-import { useDictionary } from '@/app/providers/DictionaryProvider';
+import { useLanguage } from '@/app/providers/LanguageProvider';
 import { SectionInterface } from '@/app/lib/interfaces';
 import { deleteSection, fetchSections, updateSection } from '@/app/lib/apiClient';
 import SectionForm from '@/app/components/Forms/SectionForm';
@@ -28,7 +28,7 @@ import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea
 import style from './sections.module.css';
 
 export default function SectionsPage() {
-    const { dictionary } = useDictionary();
+    const { dictionary } = useLanguage();
     const [sections, setSections] = React.useState<SectionInterface[]>([]);
     const [addSectionOpen, setAddSectionOpen] = React.useState(false);
     const [editSection, setEditSection] = React.useState<SectionInterface | undefined>(undefined);

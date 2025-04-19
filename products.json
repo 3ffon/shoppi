@@ -8,12 +8,12 @@
     {
       "id": "drinks",
       "name": "שתייה",
-      "order": 0
+      "order": 1
     },
     {
       "id": "deli",
       "name": "מעדנייה",
-      "order": 1
+      "order": 0
     },
     {
       "id": "dairy",
@@ -43,6 +43,14 @@
   ],
   "products": [
     {
+      "id": "t6u7v8w9x0",
+      "name": "פטינה",
+      "section": "deli",
+      "icon": "",
+      "image": "",
+      "created": ""
+    },
+    {
       "id": "e1f2g3h4i5",
       "name": "קולה זירו 1ל",
       "section": "drinks",
@@ -62,14 +70,6 @@
       "id": "o1p2q3r4s5",
       "name": "שישיית מים 1.5ל",
       "section": "drinks",
-      "icon": "",
-      "image": "",
-      "created": ""
-    },
-    {
-      "id": "t6u7v8w9x0",
-      "name": "פטינה",
-      "section": "deli",
       "icon": "",
       "image": "",
       "created": ""
@@ -237,23 +237,83 @@
   ],
   "mainCart": {
     "products": {
-      "bos0c0zmzie": {
-        "id": "bos0c0zmzie",
-        "quantity": 1,
-        "checked": false
-      },
-      "j6k7l8m9n0": {
-        "id": "j6k7l8m9n0",
-        "quantity": 1,
-        "checked": false
-      },
-      "t6u7v8w9x0": {
-        "id": "t6u7v8w9x0",
-        "quantity": 1,
-        "checked": false
-      },
       "y1z2a3b4c5": {
         "id": "y1z2a3b4c5",
+        "quantity": 1,
+        "checked": false
+      },
+      "fue23ay5ysd": {
+        "id": "fue23ay5ysd",
+        "quantity": 1,
+        "checked": false
+      },
+      "a1b2c3d4e5": {
+        "id": "a1b2c3d4e5",
+        "quantity": 1,
+        "checked": false
+      },
+      "k1l2m3n4o5": {
+        "id": "k1l2m3n4o5",
+        "quantity": 2,
+        "checked": false
+      },
+      "o1p2q3r4s5": {
+        "id": "o1p2q3r4s5",
+        "quantity": 1,
+        "checked": false
+      },
+      "u1v2w3x4y5": {
+        "id": "u1v2w3x4y5",
+        "quantity": 1,
+        "checked": false
+      },
+      "z6a7b8c9d0": {
+        "id": "z6a7b8c9d0",
+        "quantity": 1,
+        "checked": false
+      },
+      "ybucsvwj04": {
+        "id": "ybucsvwj04",
+        "quantity": 1,
+        "checked": true
+      },
+      "n6o7p8q9r0": {
+        "id": "n6o7p8q9r0",
+        "quantity": 1,
+        "checked": false
+      },
+      "x6y7z8a9b0": {
+        "id": "x6y7z8a9b0",
+        "quantity": 1,
+        "checked": false
+      },
+      "wvrcfwh69uq": {
+        "id": "wvrcfwh69uq",
+        "quantity": 1,
+        "checked": false
+      },
+      "zdqiodi71al": {
+        "id": "zdqiodi71al",
+        "quantity": 1,
+        "checked": false
+      },
+      "2jjdn7tmvzo": {
+        "id": "2jjdn7tmvzo",
+        "quantity": 1,
+        "checked": false
+      },
+      "ynnnnnu5f6": {
+        "id": "ynnnnnu5f6",
+        "quantity": 1,
+        "checked": false
+      },
+      "s1t2u3v4w5": {
+        "id": "s1t2u3v4w5",
+        "quantity": 4,
+        "checked": true
+      },
+      "r5rjpw6yj0n": {
+        "id": "r5rjpw6yj0n",
         "quantity": 1,
         "checked": false
       },
@@ -262,18 +322,13 @@
         "quantity": 1,
         "checked": false
       },
-      "n6o7p8q9r0": {
-        "id": "n6o7p8q9r0",
+      "bos0c0zmzie": {
+        "id": "bos0c0zmzie",
         "quantity": 1,
         "checked": false
       },
       "87qz3sl92eu": {
         "id": "87qz3sl92eu",
-        "quantity": 3,
-        "checked": false
-      },
-      "fue23ay5ysd": {
-        "id": "fue23ay5ysd",
         "quantity": 1,
         "checked": false
       }

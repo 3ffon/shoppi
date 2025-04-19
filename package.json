@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker:build": "docker build -t shoppi .",
+    "docker:run": "docker run -p 3000:3000 -v \"$(pwd)/products.json:/app/products.json\" shoppi",
+    "docker:dev": "npm run docker:build && npm run docker:run"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -17,10 +20,12 @@
     "@mui/icons-material": "^6.4.1",
     "@mui/material": "^6.4.1",
     "axios": "^1.7.9",
+    "cookies-next": "^5.1.0",
     "framer-motion": "^12.0.5",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "next": "^15.1.7",
+    "next-pwa": "^5.6.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "stylis": "^4.3.5",
@@ -30,6 +35,7 @@
     "@eslint/eslintrc": "^3",
     "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.17.14",
+    "@types/next-pwa": "^5.6.9",
     "@types/node": "^22.13.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",

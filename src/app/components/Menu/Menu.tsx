@@ -28,10 +28,9 @@ import {
   Checklist as ChecklistIcon,
   ShoppingCart as ShoppingCartIcon
 } from "@mui/icons-material";
-import { useDictionary } from '@/app/providers/DictionaryProvider';
-import Cookies from "js-cookie";
+import { useLanguage } from '@/app/providers/LanguageProvider';
 import style from './menu.module.css';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -43,12 +42,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function Menu({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
   const router = useRouter();
   const theme = useTheme();
   const { setMode } = useColorScheme();
-  const { dictionary, locale } = useDictionary();
-  const rtl = locale === 'he';
+  const { dictionary, locale, isRTL, setLocale } = useLanguage();
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -57,26 +54,6 @@ export default function Menu({ children }: { children: React.ReactNode }) {
     }
     setOpen(open);
   };
-
-  const switchLocale = (newLocale: string) => {
-    // Set the new locale in cookies
-    Cookies.set("NEXT_LOCALE", newLocale, { expires: 365 });
-
-    // Replace the locale in the current path
-    const pathSegments = pathname.split("/");
-    if (pathSegments[1]) {
-      pathSegments[1] = newLocale; // Replace the locale
-    } else {
-      pathSegments.unshift(newLocale); // Add the locale if not present
-    }
-
-    const newPathname = pathSegments.join("/");
-
-    // Redirect to the updated path
-    router.push(newPathname);
-  };
-
-
 
   return (
     <Box className={style.menu_wrapper}>
@@ -93,6 +70,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
           <Typography variant="h6" noWrap component="div" className={style.title}>
             {dictionary.app_title}
           </Typography>
+          <Box sx={{ flexGrow: 1 }} />
         </Toolbar>
       </AppBar>
       <nav>
@@ -101,7 +79,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
           }}>
           <DrawerHeader>
             <IconButton onClick={toggleDrawer(false)}>
-              {rtl ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              {isRTL ? <ChevronLeftIcon /> : <ChevronRightIcon />}
             </IconButton>
           </DrawerHeader>
           <Divider />
@@ -143,7 +121,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
             </ListItem>
 
             <Divider />
-            <ListItem onClick={() => switchLocale(locale === "he" ? "en" : "he")}>
+            <ListItem onClick={() => setLocale(locale === "he" ? "en" : "he")}>
               <ListItemButton>
                 <ListItemIcon>
                   <LanguageIcon />

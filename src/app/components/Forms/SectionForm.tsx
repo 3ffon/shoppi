@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import style from "./forms.module.css";
-import { useDictionary } from "@/app/providers/DictionaryProvider";
+import { useLanguage } from "@/app/providers/LanguageProvider";
 import { SectionInterface } from "@/app/lib/interfaces";
 import { generateId } from "@/app/lib/utils";
 import React, { useEffect } from "react";
@@ -30,7 +30,7 @@ export default function SectionForm({ ...props }: SectionFormProps) {
     } = props;
 
     const theme = useTheme();
-    const { dictionary } = useDictionary();
+    const { dictionary } = useLanguage();
     const isEdit = section !== undefined;
 
     const [sectionData, setSectionData] = React.useState<SectionInterface>({

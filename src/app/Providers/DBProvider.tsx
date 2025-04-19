@@ -210,7 +210,7 @@ export function DBProvider({ children }: { children: React.ReactNode }) {
         
         try {
             await addItemToMainCart(cartItem);
-            showNotification(dictionary.item_add_to_cart_success || 'Item added to cart successfully', 'success');
+            // showNotification(dictionary.item_add_to_cart_success || 'Item added to cart successfully', 'success');
         } catch (err) {
             console.error(err);
             showNotification(dictionary.item_add_to_cart_failed || 'Failed to add item to cart', 'error');
@@ -232,7 +232,7 @@ export function DBProvider({ children }: { children: React.ReactNode }) {
         
         try {
             await updateMainCartItem(cartItem);
-            showNotification(dictionary.item_update_in_cart_success, 'success');
+            // showNotification(dictionary.item_update_in_cart_success, 'success');
         } catch (err) {
             console.error(err);
             showNotification(dictionary.item_update_in_cart_failed, 'error');
@@ -253,7 +253,7 @@ export function DBProvider({ children }: { children: React.ReactNode }) {
         
         try {
             await removeItemFromMainCart(itemId);
-            showNotification(dictionary.item_remove_from_cart_success, 'success');
+            // showNotification(dictionary.item_remove_from_cart_success, 'success');
         } catch (err) {
             console.error(err);
             showNotification(dictionary.item_remove_from_cart_failed, 'error');

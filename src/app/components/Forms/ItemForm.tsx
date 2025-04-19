@@ -12,7 +12,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 import style from "./forms.module.css";
-import { useDictionary } from "@/app/providers/DictionaryProvider";
+import { useLanguage } from "@/app/providers/LanguageProvider";
 import { useDB } from "@/app/providers/DBProvider";
 import { ProductInterface, SectionInterface } from "@/app/lib/interfaces";
 import { generateId } from "@/app/lib/utils";
@@ -41,7 +41,7 @@ export default function ItemForm({ ...props }: ItemFormProps) {
 
     const isEdit = item !== undefined;
     const theme = useTheme();
-    const { dictionary } = useDictionary();
+    const { dictionary } = useLanguage();
     const [section, setSection] = React.useState<string>(item ? item.section : '');
     const sectionInputRef = React.useRef<HTMLInputElement>(null);
     const { sections, updateProduct, createProduct, createSection } = useDB();
