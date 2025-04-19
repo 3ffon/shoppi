@@ -73,21 +73,21 @@ export function DBProvider({ children }: { children: React.ReactNode }) {
     }, []); // Remove products dependency as we always want fresh data
 
     useEffect(() => {
-        // let timer: NodeJS.Timeout;
-        // let mounted = true;
+        let timer: NodeJS.Timeout;
+        let mounted = true;
         loadDB();
-        // const scheduleUpdateDB = async () => {
-        //     if (mounted) {
-        //         await loadDB();
-        //         timer = setTimeout(scheduleUpdateDB, 5000);
-        //     }
-        // };
+        const scheduleUpdateDB = async () => {
+            if (mounted) {
+                await loadDB();
+                timer = setTimeout(scheduleUpdateDB, 2000);
+            }
+        };
 
-        // scheduleUpdateDB();
+        scheduleUpdateDB();
 
         return () => {
-            // mounted = false;
-            // clearTimeout(timer);
+            mounted = false;
+            clearTimeout(timer);
         }
     }, [loadDB]);
 
