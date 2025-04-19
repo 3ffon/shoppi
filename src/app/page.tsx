@@ -379,7 +379,7 @@ export default function Home() {
                     disabled={checkedItems.length === 0}
                     startIcon={<CheckCircleOutlineIcon />}
                 >
-                    {dictionary.clear_checked}
+                    {dictionary.clear_checked} {checkedItems.length ? `(${checkedItems.length})` : ''}
                 </Button>
                 <Button 
                     variant="contained" 
@@ -389,7 +389,7 @@ export default function Home() {
                     disabled={sortedProducts.length === 0}
                     startIcon={<DeleteSweepIcon />}
                 >
-                    {dictionary.clear_cart}
+                    {dictionary.clear_cart} {sortedProducts.length ? `(${sortedProducts.length})` : ''}
                 </Button>
             </div>
 
