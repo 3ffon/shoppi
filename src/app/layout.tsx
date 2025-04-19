@@ -20,7 +20,6 @@ export function generateViewport({ }) {
 
 export function generateMetadata() {
   return {
-    manifest: "/manifest.json",
     appleWebApp: {
       capable: true,
       statusBarStyle: "black-translucent",
@@ -46,6 +45,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={rtl ? "rtl" : "ltr"} className={style.global}>
+      <head>
+        <link rel="manifest" href={locale === 'he' ? '/manifest_he.json' : '/manifest.json'} />
+      </head>
       <MuiThemeProvider rtl={rtl}>
         <body className={style.global}>
           <LanguageProvider initialLocale={locale} initialDictionary={dictionary}>
