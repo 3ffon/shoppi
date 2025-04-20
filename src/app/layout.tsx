@@ -28,7 +28,8 @@ export function generateMetadata() {
     icons: {
       icon: "/icons/icon-192x192.png",
       apple: "/icons/icon-192x192.png",
-    }
+    },
+    
   };
 }
 
@@ -47,6 +48,11 @@ export default async function RootLayout({
     <html lang={locale} dir={rtl ? "rtl" : "ltr"} className={style.global}>
       <head>
         <link rel="manifest" href={locale === 'he' ? '/manifest_he.json' : '/manifest.json'} />
+        <title>{locale === 'he' ? 'קניות-לי' : 'Shoppi'}</title>
+        <meta property="og:image" content={locale === 'he' ? '/icons/shoppi_he.png' : '/icons/shoppi.png'} />
+        <meta property="og:title" content={locale === 'he' ? 'קניות-לי' : 'Shoppi'} />
+        <meta property="og:description" content={locale === 'he' ? 'קניות-לי' : 'Shoppi'} />
+        <meta property="og:url" content="https://shoppi.3fon.io" />
       </head>
       <MuiThemeProvider rtl={rtl}>
         <body className={style.global}>
