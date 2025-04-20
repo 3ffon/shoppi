@@ -51,7 +51,7 @@ export default async function RootLayout({
         <title>{locale === 'he' ? 'קניות-לי' : 'Shoppi'}</title>
         <meta property="og:image" content={locale === 'he' ? '/icons/shoppi_he.png' : '/icons/shoppi.png'} />
         <meta property="og:title" content={locale === 'he' ? 'קניות-לי' : 'Shoppi'} />
-        <meta property="og:description" content={locale === 'he' ? 'קניות-לי' : 'Shoppi'} />
+        <meta property="og:description" content={locale === 'he' ? 'הקניות של עמית וענבר' : 'The power couple\'s shopping list'} />
         <meta property="og:url" content="https://shoppi.3fon.io" />
       </head>
       <MuiThemeProvider rtl={rtl}>
