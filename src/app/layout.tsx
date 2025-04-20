@@ -2,9 +2,9 @@ import React from "react";
 import { cookies } from 'next/headers';
 import MuiThemeProvider from "./MuiThemeProvider";
 import { getDictionary } from "@/app/lib/translation";
-import { LanguageProvider } from "@/app/providers/LanguageProvider";
-import { DBProvider } from "@/app/providers/DBProvider";
-import { NotificationProvider } from "@/app/providers/NotificationProvider";
+import { LanguageProvider } from "@/app/providers_tmp/LanguageProvider";
+import { DBProvider } from "@/app/providers_tmp/DBProvider";
+import { NotificationProvider } from "@/app/providers_tmp/NotificationProvider";
 import style from "./layout.module.css";
 import Menu from "./components/Menu/Menu";
 

@@ -28,7 +28,7 @@ import {
   Checklist as ChecklistIcon,
   ShoppingCart as ShoppingCartIcon
 } from "@mui/icons-material";
-import { useLanguage } from '@/app/providers/LanguageProvider';
+import { useLanguage } from '@/app/providers_tmp/LanguageProvider';
 import style from './menu.module.css';
 import { useRouter } from 'next/navigation';
 

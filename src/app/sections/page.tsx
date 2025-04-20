@@ -20,7 +20,7 @@ import {
     Delete as DeleteIcon,
     Add as AddIcon,
 } from '@mui/icons-material';
-import { useLanguage } from '@/app/providers/LanguageProvider';
+import { useLanguage } from '@/app/providers_tmp/LanguageProvider';
 import { SectionInterface } from '@/app/lib/interfaces';
 import { deleteSection, fetchSections, updateSection } from '@/app/lib/apiClient';
 import SectionForm from '@/app/components/Forms/SectionForm';

@@ -31,8 +31,8 @@ import style from './page.module.css';
 import { CartItemInterface } from './lib/interfaces';
 import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
-import { useLanguage } from '@/app/providers/LanguageProvider';
-import { useDB } from '@/app/providers/DBProvider';
+import { useLanguage } from '@/app/providers_tmp/LanguageProvider';
+import { useDB } from '@/app/providers_tmp/DBProvider';
 
 interface ItemProps {
     item: CartItemInterface;

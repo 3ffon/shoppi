@@ -31,8 +31,8 @@ import style from './page.module.css';
 import { ProductInterface } from '@/app/lib/interfaces';
 import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
-import { useLanguage } from '@/app/providers/LanguageProvider';
-import { useDB } from '@/app/providers/DBProvider';
+import { useLanguage } from '@/app/providers_tmp/LanguageProvider';
+import { useDB } from '@/app/providers_tmp/DBProvider';
 
 import ItemForm from '@/app/components/Forms/ItemForm'
 
