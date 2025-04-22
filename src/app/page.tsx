@@ -257,7 +257,7 @@ function Item({ ...props }: ItemProps) {
 export default function Home() {
     const theme = useTheme();
     const { dictionary } = useLanguage();
-    const { products, mainCart, removeCartItem } = useDB();
+    const { products, mainCart, removeCartItem, sections } = useDB();
     const [searctInput, setSearchInput] = React.useState('');
     const [search, setSearch] = React.useState('');
     const [isDragging, setIsDragging] = React.useState(false);
@@ -270,11 +270,14 @@ export default function Home() {
     });
     
     // Sort products: unchecked items first, then checked items
+    // then, sort by section order, then by name
     const sortedProducts = [...filteredProducts].sort((a, b) => {
         if (a.checked === b.checked) {
-            // If checked status is the same, sort alphabetically by name
-            return products[a.id]?.name.localeCompare(products[b.id]?.name) || 0;
+            // If checked status is the same, sort by section order, then by name
+            return (sections[products[a.id as string]?.section as string]?.order ?? 999) - (sections[products[b.id as string]?.section as string]?.order ?? 999) ||
+                products[a.id as string]?.name.localeCompare(products[b.id as string]?.name) || 0;
         }
+        
         // Sort by checked status (unchecked first)
         return a.checked ? 1 : -1;
     });
