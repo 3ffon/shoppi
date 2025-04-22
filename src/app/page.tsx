@@ -33,6 +33,7 @@ import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate
 import { debounce } from 'lodash';
 import { useLanguage } from '@/app/providers/LanguageProvider';
 import { useDB } from '@/app/providers/DBProvider';
+import { useDeviceDetect } from '@/app/hooks/useDeviceDetect';
 
 interface ItemProps {
     item: CartItemInterface;
@@ -263,6 +264,7 @@ export default function Home() {
     const [isDragging, setIsDragging] = React.useState(false);
     const [openClearCartDialog, setOpenClearCartDialog] = React.useState(false);
     const [openClearCheckedDialog, setOpenClearCheckedDialog] = React.useState(false);
+    const { isIOS } = useDeviceDetect();
     
     // Filter products / section by search
     const filteredProducts = Object.values(mainCart.products).filter((product: Partial<CartItemInterface>) => {
@@ -374,7 +376,7 @@ export default function Home() {
             </div>
             
             {/* Bottom Bar */}
-            <div className={style.bottom_bar + ' ' + theme.palette.mode}>
+            <div className={style.bottom_bar + ' ' + theme.palette.mode + (isIOS ? ' is-ios' : '')}>
                 <Button 
                     variant="contained" 
                     color="secondary"
