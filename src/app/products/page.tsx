@@ -355,8 +355,11 @@ export default function Home() {
     const [editItem, setEditItem] = React.useState<ProductInterface | null>(null)
     const [isDragging, setIsDragging] = React.useState(false);
     const [editedItemId, setEditedItemId] = React.useState<string | null>(null);
+
+    // Filter products / section by search
     const filteredProducts = Object.values(products).filter((product: ProductInterface) =>
-        product.name.toLowerCase().includes(search.toLowerCase())
+        product.name.toLowerCase().includes(search.toLowerCase()) ||
+        sections[product.section]?.name?.toLowerCase().includes(search.toLowerCase())
     ).sort((a, b) => {
         if (a.section !== b.section) {
             return (sections[a.section].order ?? 999) - (sections[b.section].order ?? 999);

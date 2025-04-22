@@ -264,9 +264,10 @@ export default function Home() {
     const [openClearCartDialog, setOpenClearCartDialog] = React.useState(false);
     const [openClearCheckedDialog, setOpenClearCheckedDialog] = React.useState(false);
     
-    // Filter products based on search
+    // Filter products / section by search
     const filteredProducts = Object.values(mainCart.products).filter((product: Partial<CartItemInterface>) => {
-        return products[product.id as string]?.name?.toLowerCase().includes(search.toLowerCase());
+        return products[product.id as string]?.name?.toLowerCase().includes(search.toLowerCase()) ||
+            sections[products[product.id as string]?.section as string]?.name?.toLowerCase().includes(search.toLowerCase());
     });
     
     // Sort products: unchecked items first, then checked items
@@ -277,7 +278,7 @@ export default function Home() {
             return (sections[products[a.id as string]?.section as string]?.order ?? 999) - (sections[products[b.id as string]?.section as string]?.order ?? 999) ||
                 products[a.id as string]?.name.localeCompare(products[b.id as string]?.name) || 0;
         }
-        
+
         // Sort by checked status (unchecked first)
         return a.checked ? 1 : -1;
     });
