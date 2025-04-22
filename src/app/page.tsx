@@ -342,7 +342,7 @@ export default function Home() {
 
             <div className={style.list_wrapper}>
                 <List
-                    className={style.list}
+                    className={style.list + (isIOS ? ' is-ios' : '')}
                     subheader={<li />}
                     dense
                 >

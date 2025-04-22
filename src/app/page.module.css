@@ -41,7 +41,9 @@
   overscroll-behavior: contain;
 }
 
-
+.list:global(.is-ios) {
+  height: calc(100% - 130px);
+}
 
 .list > div > div > div > li > div {
   padding-left: 0 !important;
