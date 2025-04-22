@@ -35,14 +35,10 @@
 
 .list {
   width: 100%;
-  height: calc(100% - 120px);
+  height: calc(100% - 130px);
   overflow-y: auto;
   touch-action: pan-x pan-y;
   overscroll-behavior: contain;
-}
-
-.list:global(.is-ios) {
-  height: calc(100% - 130px);
 }
 
 .list > div > div > div > li > div {
