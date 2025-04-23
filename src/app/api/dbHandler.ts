@@ -6,6 +6,7 @@ import {
   CartItemInterface,
   MainCartInterface,
 } from "../lib/interfaces";
+const DB_PATH = process.env.DB_PATH || "db.json";
 
 class DBHandler {
   db!: DBReseponseInterface;
@@ -135,5 +136,5 @@ class DBHandler {
   // #endregion
 }
 
-const DBController = new DBHandler("./products.json");
+const DBController = new DBHandler(DB_PATH);
 export default DBController;
