@@ -132,6 +132,23 @@ export function DBProvider({ children }: { children: React.ReactNode }) {
             delete newProducts[product.id];
             return newProducts;
         });
+
+        // Check if product exists in cart and remove it
+        if (mainCart.products[product.id]) {
+            setMainCart(currentCart => {
+                const newProducts = { ...currentCart.products };
+                delete newProducts[product.id];
+                return {
+                    products: newProducts
+                };
+            });
+            try {
+                await removeItemFromMainCart(product.id);
+            } catch (err) {
+                console.error("Failed to remove item from cart:", err);
+            }
+        }
+
         try {
             await deleteProduct(product);
             showNotification(dictionary.item_delete_success, 'success');
@@ -141,8 +158,7 @@ export function DBProvider({ children }: { children: React.ReactNode }) {
         } finally {
             setLoading(false);
         }
-    }, []);
-
+    }, [mainCart.products]);
 
     /**
      * Managing Sections

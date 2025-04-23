@@ -7,14 +7,16 @@ import {
     Modal,
     MenuItem,
     Select,
-    InputLabel
+    InputLabel,
+    FormControlLabel,
+    Checkbox
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useTheme } from "@mui/material/styles";
 import style from "./forms.module.css";
 import { useLanguage } from "@/app/providers/LanguageProvider";
 import { useDB } from "@/app/providers/DBProvider";
-import { ProductInterface, SectionInterface } from "@/app/lib/interfaces";
+import { ProductInterface, SectionInterface, CartItemInterface } from "@/app/lib/interfaces";
 import { generateId } from "@/app/lib/utils";
 import React, { useCallback } from "react";
 
@@ -26,8 +28,6 @@ interface ItemFormProps {
     setOpenModal: (open: boolean) => void;
     onClose?: () => void;
 }
-
-
 
 export default function ItemForm({ ...props }: ItemFormProps) {
     const {
@@ -43,11 +43,13 @@ export default function ItemForm({ ...props }: ItemFormProps) {
     const theme = useTheme();
     const { dictionary } = useLanguage();
     const [section, setSection] = React.useState<string>(item ? item.section : '');
+    const [addToMainCart, setAddToMainCart] = React.useState<boolean>(false);
     const sectionInputRef = React.useRef<HTMLInputElement>(null);
-    const { sections, updateProduct, createProduct, createSection } = useDB();
+    const { sections, updateProduct, createProduct, createSection, addCartItem } = useDB();
 
     const cleanStateAndClose = useCallback(() => {
         setSection('');
+        setAddToMainCart(false);
         setOpenModal(false);
         if (onClose) onClose();
     }, [onClose, setOpenModal]);
@@ -93,6 +95,16 @@ export default function ItemForm({ ...props }: ItemFormProps) {
             };
 
             await createProduct(product);
+
+            // Add to main cart if checkbox is checked
+            if (addToMainCart) {
+                const cartItem: CartItemInterface = {
+                    id: product.id,
+                    quantity: 1,
+                    checked: false
+                };
+                await addCartItem(cartItem);
+            }
         }
 
         // if additionalOnSubmit is provided, call it
@@ -109,7 +121,9 @@ export default function ItemForm({ ...props }: ItemFormProps) {
         item,
         section,
         updateProduct,
-        createProduct
+        createProduct,
+        addToMainCart,
+        addCartItem
     ]);
 
     return (
@@ -187,6 +201,20 @@ export default function ItemForm({ ...props }: ItemFormProps) {
                     sx={{ mb: 2 }}
                 />
                 }
+                {!isEdit && (
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={addToMainCart}
+                                onChange={(e) => setAddToMainCart(e.target.checked)}
+                                name="addToMainCart"
+                                color="primary"
+                            />
+                        }
+                        label={dictionary.add_to_cart}
+                        sx={{ mb: 2 }}
+                    />
+                )}
                 <Box display="flex" gap={2}>
                     <Button
                         variant="contained"
@@ -206,4 +234,4 @@ export default function ItemForm({ ...props }: ItemFormProps) {
             </Box>
         </Modal>
     )
-} 
+}

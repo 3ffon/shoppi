@@ -31,6 +31,7 @@
     "item_delete_success": "Product deleted successfully",
     "item_delete_failed": "Failed to delete product",
 
+    "add_to_cart": "Add to Cart",
     "item_update_in_cart_success": "Product updated in cart successfully",
     "item_update_in_cart_failed": "Failed to update product in cart",
     "item_add_to_cart_success": "Product added to cart successfully",

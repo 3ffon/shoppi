@@ -31,6 +31,7 @@
     "item_delete_success": "המוצר נמחק בהצלחה",
     "item_delete_failed": "שגיאה במחיקת מוצר",
 
+    "add_to_cart": "הוסף לעגלה",
     "item_update_in_cart_success": "המוצר עודכן בעגלה בהצלחה",
     "item_update_in_cart_failed": "שגיאה בעריכת מוצר בעגלה",
     "item_add_to_cart_success": "המוצר נוסף בעגלה בהצלחה",
