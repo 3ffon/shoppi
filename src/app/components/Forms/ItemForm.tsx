@@ -43,7 +43,7 @@ export default function ItemForm({ ...props }: ItemFormProps) {
     const theme = useTheme();
     const { dictionary } = useLanguage();
     const [section, setSection] = React.useState<string>(item ? item.section : '');
-    const [addToMainCart, setAddToMainCart] = React.useState<boolean>(false);
+    const [addToMainCart, setAddToMainCart] = React.useState<boolean>(true);
     const sectionInputRef = React.useRef<HTMLInputElement>(null);
     const { sections, updateProduct, createProduct, createSection, addCartItem } = useDB();
 
