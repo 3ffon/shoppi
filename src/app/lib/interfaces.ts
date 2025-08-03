@@ -22,6 +22,7 @@ export interface CartItemInterface {
   id: string;
   quantity: number;
   checked: boolean;
+  fromSearch?: boolean;
 }
 
 // CartInterface - schema of a cart

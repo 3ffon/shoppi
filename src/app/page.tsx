@@ -15,7 +15,8 @@ import {
     DialogActions,
     DialogTitle,
     Badge,
-    Checkbox
+    Checkbox,
+    IconButton
 } from '@mui/material';
 
 import { useTheme } from '@mui/material/styles';
@@ -24,11 +25,12 @@ import {
     Clear as ClearIcon,
     DeleteOutlined as DeleteIcon,
     DeleteSweep as DeleteSweepIcon,
-    CheckCircleOutline as CheckCircleOutlineIcon
+    CheckCircleOutline as CheckCircleOutlineIcon,
+    AddShoppingCart as AddToCartIcon,
 } from '@mui/icons-material';
 
 import style from './page.module.css';
-import { CartItemInterface } from './lib/interfaces';
+import { CartItemInterface, ProductInterface } from './lib/interfaces';
 import { motion, AnimatePresence, PanInfo, useMotionValue, useTransform, animate } from 'framer-motion';
 import { debounce } from 'lodash';
 import { useLanguage } from '@/app/providers/LanguageProvider';
@@ -49,7 +51,7 @@ function Item({ ...props }: ItemProps) {
 
     
     const { dictionary } = useLanguage();
-    const { sections, products, removeCartItem, updateCartItem } = useDB();
+    const { sections, products, removeCartItem, updateCartItem, addCartItem } = useDB();
     const section = sections[products[props.item.id].section];
 
     const [item, setItem] = React.useState(props.item);
@@ -139,6 +141,8 @@ function Item({ ...props }: ItemProps) {
         setContextMenu(null);
     };
 
+    const isFromSearch = item.fromSearch;
+
     return (
         <Box sx={{ position: 'relative', overflow: 'hidden', width: '100%' }}>
             <motion.div
@@ -176,7 +180,7 @@ function Item({ ...props }: ItemProps) {
                             </div>
                             <small>{section ? section.name : dictionary.no_section}</small>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 100}}>
+                        {!isFromSearch ? (<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: 100}}>
                             <Badge 
                                 badgeContent={item.quantity} 
                                 color="success" 
@@ -188,7 +192,20 @@ function Item({ ...props }: ItemProps) {
                                 }}
                                 checked={item.checked}
                             />
-                        </div>
+                        </div>) : <IconButton
+                                    size="small"
+                                    color="primary"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        addCartItem({
+                                            id: item.id,
+                                            quantity: 1,
+                                            checked: false
+                                        });
+                                    }}
+                                >
+                                    <AddToCartIcon />
+                                </IconButton>}
                     </ListItemButton>
                     <Menu
                         open={contextMenu !== null}
@@ -284,6 +301,24 @@ export default function Home() {
         // Sort by checked status (unchecked first)
         return a.checked ? 1 : -1;
     });
+
+    const totalItems = sortedProducts.length;
+
+    // Add matching product by name from products store that is not in cart if trying to search
+    if (search.length) { 
+        const matchingProduct = Object.values(products).filter((product: ProductInterface) => {
+            return !sortedProducts.some(item => item.id === product.id) && product.name.includes(search);
+        });
+        
+        matchingProduct.forEach((product: ProductInterface) => {
+            sortedProducts.push({
+                ...product,
+                quantity: 0,
+                checked: false,
+                fromSearch: true,
+            });
+        });
+    }
 
     // Get checked items
     const checkedItems = sortedProducts.filter(item => item.checked);
@@ -392,10 +427,10 @@ export default function Home() {
                     color="error"
                     className={style.bottom_bar_button}
                     onClick={() => setOpenClearCartDialog(true)}
-                    disabled={sortedProducts.length === 0}
+                    disabled={totalItems === 0}
                     startIcon={<DeleteSweepIcon />}
                 >
-                    {dictionary.clear_cart} {sortedProducts.length ? `(${sortedProducts.length})` : ''}
+                    {dictionary.clear_cart} {totalItems ? `(${totalItems})` : ''}
                 </Button>
             </div>
 
