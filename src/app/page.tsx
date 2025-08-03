@@ -27,6 +27,7 @@ import {
     DeleteSweep as DeleteSweepIcon,
     CheckCircleOutline as CheckCircleOutlineIcon,
     AddShoppingCart as AddToCartIcon,
+    Add as AddIcon,
 } from '@mui/icons-material';
 
 import style from './page.module.css';
@@ -36,6 +37,7 @@ import { debounce } from 'lodash';
 import { useLanguage } from '@/app/providers/LanguageProvider';
 import { useDB } from '@/app/providers/DBProvider';
 import { useDeviceDetect } from '@/app/hooks/useDeviceDetect';
+import ItemForm from './components/Forms/ItemForm';
 
 interface ItemProps {
     item: CartItemInterface;
@@ -272,6 +274,37 @@ function Item({ ...props }: ItemProps) {
     );
 }
 
+function AddOrEditItem({ ...props }) {
+    const {
+        show,
+        addItem,
+    } = props;
+
+    const { dictionary } = useLanguage();
+
+    return (
+        <AnimatePresence>
+            {show && <motion.div
+                className={style.item_add}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.2 }}
+            >
+                <Button
+                    onClick={addItem}
+                    color="primary"
+                    size="medium"
+                    variant="contained"
+                    aria-label={dictionary.item_add_btn}
+                >
+                    {dictionary.item_add_btn} <AddIcon />
+                </Button>
+            </motion.div>}
+        </AnimatePresence>
+    )
+}
+
 export default function Home() {
     const theme = useTheme();
     const { dictionary } = useLanguage();
@@ -281,6 +314,7 @@ export default function Home() {
     const [isDragging, setIsDragging] = React.useState(false);
     const [openClearCartDialog, setOpenClearCartDialog] = React.useState(false);
     const [openClearCheckedDialog, setOpenClearCheckedDialog] = React.useState(false);
+    const [openAddItemModal, setOpenAddItemModal] = React.useState(false);
     const { isIOS } = useDeviceDetect();
     
     // Filter products / section by search
@@ -347,6 +381,10 @@ export default function Home() {
         }
         setOpenClearCheckedDialog(false);
     };
+
+    const addItem = () => {
+        setOpenAddItemModal(true);
+    };
     
     return (
         <div className={style.component_wrapper}>
@@ -374,6 +412,8 @@ export default function Home() {
                     }}
                 />
             </div>
+
+            <AddOrEditItem show={search.length > 0} addItem={addItem} />
 
             <div className={style.list_wrapper}>
                 <List
@@ -471,6 +511,19 @@ export default function Home() {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <ItemForm
+                additionalOnSubmit={() => {
+                    setSearchInput('');
+                    setSearch('');
+                }}
+                defaultValue={searctInput.trim()}
+                openModal={openAddItemModal}
+                setOpenModal={setOpenAddItemModal}
+                onClose={() => {
+                    setOpenAddItemModal(false);
+                }}
+            />
         </div>
     );
 }
