@@ -9,7 +9,7 @@ const publicAssets = [
   '/favicon.ico'
 ];
  
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // Skip for PWA and static assets
