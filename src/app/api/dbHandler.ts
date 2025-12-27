@@ -6,7 +6,7 @@ import {
   CartItemInterface,
   MainCartInterface,
 } from "../lib/interfaces";
-const DB_PATH = process.env.DB_PATH || "db.json";
+const DB_PATH = process.env.DB_PATH || "empty.json";
 
 class DBHandler {
   db!: DBReseponseInterface;
